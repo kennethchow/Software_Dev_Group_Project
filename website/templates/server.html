@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Proteomics Server{% endblock %}
+{% block content %}
+
+<!-- ======= Web Server Section ======= -->
+<section id="server" class="server section-bg">
+    <div class="section-title">
+    <br> <br> <br>
+        <h2>Data Submission</h2>
+    </div>
+    <div class="container">
+        <div class="text-center">
+            <p>Please submit data below. <br> Formats supported (.fa, .fas, .fasta.) </p>
+            <form method="POST" action="" enctype="multipart/form-data">
+            <p><input type="file" name="file"></p>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Show prior submissions if logged in -->
+    {% if session['logged_in'] == True %}
+      <div class="section-title">
+          <br> <br> <br>
+        <h2>Prior Submissions</h2>
+      </div>
+        <ul>
+        {% for file in files %}
+            <div class="container">
+                <div class="text-center">
+                    <a href="{{ url_for('web_server.uploads', filename=file) }}">{{file}}</a>
+                </div>
+            </div>
+        {% endfor %}
+        </ul>
+
+    {% else %}
+        <div class="container">
+             <br> <br>
+            <div class="text-center">
+                <p>Please register/login to store data. </p>
+            </div>
+        </div>
+
+    {% endif %}
+
+</section><!-- End Server Section -->
+
+
+{% endblock %}

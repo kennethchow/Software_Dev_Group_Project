@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+
+<!-- ======= Login Section ======= -->
+    <section id="login" class="login section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <br> <br> <br>
+          <h2>Login</h2>
+        </div>
+      </div>
+
+      <!-- Login Forms -->
+      <div class="container">
+        <form method="POST", class="php-email-form">
+          <div class="col-md-4 form-group mt-md-0">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="Enter email"
+              data-rule="email"
+              data-msg="Please enter a valid email"
+            />
+          </div>
+          <div class="col-md-4 form-group mt-md-0">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Enter password"
+            />
+          </div>
+          <br />
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
+        </form>
+      </div>
+    </section><!-- End Login Section -->
+
+
+{% endblock %}

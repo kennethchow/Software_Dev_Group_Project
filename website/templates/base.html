@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Cache Prevention -->
+    <!-- DEVELOPMENT ONLY REMOVE WHEN DEPLOY!! -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <!-- Title - Can be altered when extended in other pages -->
+    <title>{% block title %}Home{% endblock %}</title>
+
+    <!-- Favicons -->
+    <link href="static/img/qmul_64.png" rel="icon">
+    <link href="static/img/qmul_icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- External CSS Files -->
+    <link href="static/external/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="static/external/animate.css/animate.min.css" rel="stylesheet">
+    <link href="static/external/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/external/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="static/external/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="static/external/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="static/external/remixicon/remixicon.css" rel="stylesheet">
+    <link href="static/external/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="static/style.css" rel="stylesheet">
+
+</head>
+<body>
+<!-- ======= Contact Top Bar ======= -->
+<div id="topbar" class="d-flex align-items-center fixed-top">
+    <div class="container d-flex justify-content-between">
+        <div class="contact-info d-flex align-items-center">
+            <i class="bi bi-envelope"></i> <a href="mailto:msc_bio@qmul.ac.uk">msc_bioinformatics@qmul.ac.uk</a>
+        </div>
+        <div class="d-none d-lg-flex social-links align-items-center">
+            {% if session['logged_in'] == True %}
+            <a>{{ session['user_email'] }}</a>
+            {% else %}
+            <a></a>
+            {% endif %}
+            <a href="https://twitter.com/QM_SBBS" class="twitter"><i
+                    class="bi bi-twitter"></i></a>
+            <a href="https://www.facebook.com/qmulbiologicalandbehavioural" class="facebook"><i
+                    class="bi bi-facebook"></i></a>
+            <a href="https://www.linkedin.com/company/queen-mary-university-of-london-school-of-biological-and-behavioural-sciences/about/"
+               class="linkedin"><i class="bi bi-linkedin"></i></i></a>
+        </div>
+    </div>
+</div>
+
+<!-- ======= Navigation Bar ======= -->
+<header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+        <!-- <h1 class="logo me-auto"><a href="about.html">Queen Mary University of London - MSc Bioinformatics</a></h1> -->
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <a href="/" class="logo me-auto"><img src="static/img/qmul_icon_tp.png" alt="" class="img-fluid"></a>
+
+        <nav id="navbar" class="navbar order-last order-lg-0">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/server">Proteomics Server</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+
+        <!-- Login & Register Buttons -->
+        {% if session['logged_in'] == True %}
+        <a href="/logout" class="login-btn scrollto"><span class="d-none d-md-inline">Logout</span> </a>
+        {% else %}
+        <a href="/login" class="login-btn scrollto"><span class="d-none d-md-inline">Login</span> </a>
+        {% endif %}
+        <a href="/register" class="reg-btn scrollto"><span class="d-none d-md-inline">Register</span> </a>
+
+    </div>
+</header><!-- End Header -->
+
+<!-- ======= Message Handling ======= -->
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'error' %}
+    <div class="alert alert-danger alert-dismissable fade show" role="alert"
+         style="position:fixed; left: 72%; top: 22%"><span>{{ message }}</span>
+        <button type="button" class="close" data-bs-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% else %}
+    <div class="alert alert-success alert-dismissable fade show" role="alert"
+         style="position:fixed; left: 72%; top: 22%"><span>{{ message }}</span>
+        <button type="button" class="close" data-bs-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %} {% endfor %} {% endif %} {% endwith %}
+</div>
+
+{% block content %}
+
+<!-- ======= Main Title Section ======= -->
+<section id="home" class="d-flex align-items-center">
+    <div class="container">
+        <h1>Proteomics Server</h1>
+        <h2>A dedicated proteomics data portal.</h2>
+        <a href="/server" class="btn-get-started scrollto">Get Started</a>
+    </div>
+</section><!-- End Main Title -->
+
+{% endblock %}
+
+
+<!-- ======= Adjusting Top and Nav bar on Scrolling ======= -->
+<script>
+  var prevScrollpos = window.pageYOffset;
+  window.onscroll = function() {
+  var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos) {
+      document.getElementById("topbar").style.top = "0";
+      document.getElementById("header").style.top = "40px";
+    } else {
+      document.getElementById("topbar").style.top = "-50px";
+      document.getElementById("header").style.top = "0px";
+    }
+    prevScrollpos = currentScrollPos;
+  }
+  </script>
+
+  <script src="static/external/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+</html>

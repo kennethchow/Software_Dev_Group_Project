@@ -1,0 +1,5 @@
+.vscode
+.idea
+website/__pycache__
+website/dbs/database
+.virtualenv~
