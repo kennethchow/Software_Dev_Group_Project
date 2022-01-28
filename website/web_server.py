@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, flash, \
     session, send_from_directory, current_app, send_file
 from werkzeug.utils import secure_filename
-from .funcs import AAtypetable
 from flask_login import current_user, login_required
 import os, glob
 
