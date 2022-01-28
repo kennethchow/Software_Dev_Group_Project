@@ -30,35 +30,30 @@ def server():
     files = os.listdir(save_folder)
 
     if request.method == 'POST':
-        uploaded_file = request.files['file']
-        filename = secure_filename(uploaded_file.filename)
 
-        if filename != '':                                                  # If an actual file is uploaded
-            file_ext = os.path.splitext(filename)[1]
-            # print("File Ext: ", file_ext)
-            if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:     # Check file extension
-                flash('Incorrect file extension.', category='error')
-            else:                                                           # If file extension is correct
-                file_save_loc = os.path.join(save_folder, str(filename))
-                uploaded_file.save(file_save_loc)
+        for key, val in request.form.items():
+            print(key, val)
 
-                # Creating csv and image to save of AA usage:
-                AAtypetable(file_save_loc, file_ext)
-
-                # Delete tmp files if non logged-in user:
-                new_files = os.listdir(save_folder)
-                if user_id is None:
-                    for file in new_files:
-                        # If not a .jpg, download the file for the non-logged in user:
-                        if os.path.splitext(file)[1] == '.jpg':
-                            full_path = os.path.join(current_app.root_path, 'uploads', 'tmp')
-                            print("FILE NAME: ", file)
-                            return send_from_directory(full_path, file, as_attachment=True)
-
-                else:     # delete all but the .jpg image file for logged-in users
-                    for file in new_files:
-                        if os.path.splitext(file)[1] != '.jpg':
-                            os.remove(os.path.join(save_folder, str(file)))
+            # file_save_loc = os.path.join(save_folder, str(filename))
+            # uploaded_file.save(file_save_loc)
+            #
+            # # Creating csv and image to save of AA usage:
+            # AAtypetable(file_save_loc, file_ext)
+            #
+            # # Delete tmp files if non logged-in user:
+            # new_files = os.listdir(save_folder)
+            # if user_id is None:
+            #     for file in new_files:
+            #         # If not a .jpg, download the file for the non-logged in user:
+            #         if os.path.splitext(file)[1] == '.jpg':
+            #             full_path = os.path.join(current_app.root_path, 'uploads', 'tmp')
+            #             print("FILE NAME: ", file)
+            #             return send_from_directory(full_path, file, as_attachment=True)
+            #
+            # else:     # delete all but the .jpg image file for logged-in users
+            #     for file in new_files:
+            #         if os.path.splitext(file)[1] != '.jpg':
+            #             os.remove(os.path.join(save_folder, str(file)))
 
         return redirect(url_for('web_server.server'))
 

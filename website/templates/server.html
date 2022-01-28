@@ -1,28 +1,52 @@
 {% extends "base.html" %}
-{% block title %}Proteomics Server{% endblock %}
+{% block title %}Pop. Genome{% endblock %}
 {% block content %}
 
 <!-- ======= Web Server Section ======= -->
 <section id="server" class="server section-bg">
     <div class="section-title">
     <br> <br> <br>
-        <h2>Data Submission</h2>
+        <h2>Genomics Server</h2>
     </div>
     <div class="container">
-        <div class="text-center">
-            <p>Please submit data below. <br> Formats supported (.fa, .fas, .fasta.) </p>
+        <div style="margin-left: 20em;">
+            <p>Please specify a query from the options listed below. </p>
+            <br>
             <form method="POST" action="" enctype="multipart/form-data">
-            <p><input type="file" name="file"></p>
-            <button type="submit" class="btn btn-primary">Submit</button>
+              <!-- Grouping Data in a field set -->
+              <fieldset>
+
+              <!-- Genomic Coordinate - Chromosome start/end   -->
+              <p><label for="chromosomes"><b>Chromosome:</b></label>&nbsp;&nbsp;
+              <select id="chromosomes" name="chr">
+                <option value="22">22</option>
+              </select>
+              <label for="chrstart">&nbsp;&nbsp;&nbsp;&nbsp;Start Position:</label>&nbsp;&nbsp;
+              <input type="text" id="chrstart" name="chrstart" size="5">
+              <label for="chrend">&nbsp;&nbsp;&nbsp;&nbsp;End Position:</label>&nbsp;&nbsp;
+              <input type="text" id="chrend" name="chrend" size="5">
+              </p>
+
+              <!-- SNP name (rs value)   -->
+              <p><label for="snpname"><b>SNP Name (rs value):</b></label>&nbsp;&nbsp;
+              <input type="text" id="snpname" name="snpname"></p>
+
+              <!-- Gene name (+ any associated aliases)   -->
+              <p><label for="genename"><b>Gene Name:</b></label>&nbsp;&nbsp;
+              <input type="text" id="genename" name="genename"></p>
+
+            <br><div style="margin-left: 12.2em;">
+            <button type="submit" class="btn btn-primary">Submit</button></div>
+            </fieldset>
             </form>
         </div>
     </div>
 
-    <!-- Show prior submissions if logged in -->
+    <!-- Show prior results if logged in -->
     {% if session['logged_in'] == True %}
       <div class="section-title">
           <br> <br> <br>
-        <h2>Prior Submissions</h2>
+        <h2>Prior Results</h2>
       </div>
         <ul>
         {% for file in files %}
@@ -36,9 +60,9 @@
 
     {% else %}
         <div class="container">
-             <br> <br>
+             <br>
             <div class="text-center">
-                <p>Please register/login to store data. </p>
+                <p>Please register/ login to store results. </p>
             </div>
         </div>
 
