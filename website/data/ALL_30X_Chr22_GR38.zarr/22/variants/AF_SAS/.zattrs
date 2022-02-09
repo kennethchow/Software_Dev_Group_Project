@@ -1,0 +1,6 @@
+{
+    "Description": "Allele frequency in SAS",
+    "ID": "AF_SAS",
+    "Number": "A",
+    "Type": "Float"
+}

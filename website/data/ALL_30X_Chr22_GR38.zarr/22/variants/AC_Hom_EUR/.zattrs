@@ -1,0 +1,6 @@
+{
+    "Description": "Allele counts in homozygous genotypes in EUR",
+    "ID": "AC_Hom_EUR",
+    "Number": "A",
+    "Type": "Integer"
+}

@@ -1,0 +1,6 @@
+{
+    "Description": "HWE test in AFR (PMID:15789306); 1=good, 0=bad",
+    "ID": "HWE_AFR",
+    "Number": "A",
+    "Type": "Float"
+}

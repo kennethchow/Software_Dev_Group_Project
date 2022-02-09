@@ -1,0 +1,6 @@
+{
+    "Description": "Allele counts in homozygous genotypes in SAS",
+    "ID": "AC_Hom_SAS",
+    "Number": "A",
+    "Type": "Integer"
+}

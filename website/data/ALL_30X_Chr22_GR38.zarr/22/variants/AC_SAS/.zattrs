@@ -1,0 +1,6 @@
+{
+    "Description": "Allele count in genotypes in SAS",
+    "ID": "AC_SAS",
+    "Number": "A",
+    "Type": "Integer"
+}

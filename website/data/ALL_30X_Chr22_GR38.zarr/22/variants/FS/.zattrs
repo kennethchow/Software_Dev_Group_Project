@@ -1,0 +1,6 @@
+{
+    "Description": "Phred-scaled p-value using Fisher's exact test to detect strand bias",
+    "ID": "FS",
+    "Number": "1",
+    "Type": "Float"
+}

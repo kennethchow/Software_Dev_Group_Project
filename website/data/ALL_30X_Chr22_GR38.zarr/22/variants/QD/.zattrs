@@ -1,0 +1,6 @@
+{
+    "Description": "Variant Confidence/Quality by Depth",
+    "ID": "QD",
+    "Number": "1",
+    "Type": "Float"
+}

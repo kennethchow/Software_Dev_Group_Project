@@ -1,0 +1,6 @@
+{
+    "Description": "This variant was used to build the positive training set of good variants",
+    "ID": "POSITIVE_TRAIN_SITE",
+    "Number": "0",
+    "Type": "Flag"
+}

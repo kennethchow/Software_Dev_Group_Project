@@ -1,0 +1,6 @@
+{
+    "Description": "Approximate read depth; some reads may have been filtered",
+    "ID": "DP",
+    "Number": "1",
+    "Type": "Integer"
+}

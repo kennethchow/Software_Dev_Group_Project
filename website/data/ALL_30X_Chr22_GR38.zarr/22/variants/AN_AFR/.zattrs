@@ -1,0 +1,6 @@
+{
+    "Description": "Total number of alleles in called genotypes in AFR",
+    "ID": "AN_AFR",
+    "Number": "1",
+    "Type": "Integer"
+}

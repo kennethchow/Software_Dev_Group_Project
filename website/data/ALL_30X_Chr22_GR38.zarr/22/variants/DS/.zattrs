@@ -1,0 +1,6 @@
+{
+    "Description": "Were any of the samples downsampled?",
+    "ID": "DS",
+    "Number": "0",
+    "Type": "Flag"
+}

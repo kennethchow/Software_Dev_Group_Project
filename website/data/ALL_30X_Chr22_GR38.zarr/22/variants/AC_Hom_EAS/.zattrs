@@ -1,0 +1,6 @@
+{
+    "Description": "Allele counts in homozygous genotypes in EAS",
+    "ID": "AC_Hom_EAS",
+    "Number": "A",
+    "Type": "Integer"
+}

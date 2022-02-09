@@ -1,0 +1,6 @@
+{
+    "Description": "Test excess heterozygosity in SAS; 1=good, 0=bad",
+    "ID": "ExcHet_SAS",
+    "Number": "A",
+    "Type": "Float"
+}

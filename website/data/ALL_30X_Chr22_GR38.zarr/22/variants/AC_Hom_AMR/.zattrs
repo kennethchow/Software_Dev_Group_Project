@@ -1,0 +1,6 @@
+{
+    "Description": "Allele counts in homozygous genotypes in AMR",
+    "ID": "AC_Hom_AMR",
+    "Number": "A",
+    "Type": "Integer"
+}

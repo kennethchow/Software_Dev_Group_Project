@@ -1,0 +1,6 @@
+{
+    "Description": "Allele frequency in AMR",
+    "ID": "AF_AMR",
+    "Number": "A",
+    "Type": "Float"
+}

@@ -1,0 +1,6 @@
+{
+    "Description": "Allele count in genotypes in EUR (2504 unrelated samples)",
+    "ID": "AC_EUR_unrel",
+    "Number": "A",
+    "Type": "Integer"
+}

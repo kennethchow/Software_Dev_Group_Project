@@ -1,0 +1,6 @@
+{
+    "Description": "Test excess heterozygosity in AMR; 1=good, 0=bad",
+    "ID": "ExcHet_AMR",
+    "Number": "A",
+    "Type": "Float"
+}

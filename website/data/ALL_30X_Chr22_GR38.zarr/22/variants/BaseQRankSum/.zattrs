@@ -1,0 +1,6 @@
+{
+    "Description": "Z-score from Wilcoxon rank sum test of Alt Vs. Ref base qualities",
+    "ID": "BaseQRankSum",
+    "Number": "1",
+    "Type": "Float"
+}

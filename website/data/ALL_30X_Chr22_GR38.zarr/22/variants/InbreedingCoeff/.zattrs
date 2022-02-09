@@ -1,0 +1,6 @@
+{
+    "Description": "Inbreeding coefficient as estimated from the genotype likelihoods per-sample when compared against the Hardy-Weinberg expectation",
+    "ID": "InbreedingCoeff",
+    "Number": "1",
+    "Type": "Float"
+}

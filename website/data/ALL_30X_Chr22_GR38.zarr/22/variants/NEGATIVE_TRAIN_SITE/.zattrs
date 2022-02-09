@@ -1,0 +1,6 @@
+{
+    "Description": "This variant was used to build the negative training set of bad variants",
+    "ID": "NEGATIVE_TRAIN_SITE",
+    "Number": "0",
+    "Type": "Flag"
+}

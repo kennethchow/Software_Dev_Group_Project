@@ -1,0 +1,6 @@
+{
+    "Description": "Stop position of the interval",
+    "ID": "END",
+    "Number": "1",
+    "Type": "Integer"
+}

@@ -1,0 +1,6 @@
+{
+    "Description": "Allele count in genotypes in EUR",
+    "ID": "AC_EUR",
+    "Number": "A",
+    "Type": "Integer"
+}

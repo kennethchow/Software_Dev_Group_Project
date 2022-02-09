@@ -1,0 +1,6 @@
+{
+    "Description": "Total number of alleles in called genotypes in AMR (2504 unrelated samples)",
+    "ID": "AN_AMR_unrel",
+    "Number": "1",
+    "Type": "Integer"
+}

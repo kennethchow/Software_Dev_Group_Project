@@ -1,0 +1,6 @@
+{
+    "Description": "Allele count in genotypes in AFR (2504 unrelated samples)",
+    "ID": "AC_AFR_unrel",
+    "Number": "A",
+    "Type": "Integer"
+}

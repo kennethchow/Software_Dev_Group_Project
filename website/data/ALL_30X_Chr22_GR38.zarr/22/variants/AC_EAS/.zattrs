@@ -1,0 +1,6 @@
+{
+    "Description": "Allele count in genotypes in EAS",
+    "ID": "AC_EAS",
+    "Number": "A",
+    "Type": "Integer"
+}

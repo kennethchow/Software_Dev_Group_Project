@@ -1,0 +1,6 @@
+{
+    "Description": "Allele frequency in AMR (2504 unrelated samples)",
+    "ID": "AF_AMR_unrel",
+    "Number": "A",
+    "Type": "Float"
+}

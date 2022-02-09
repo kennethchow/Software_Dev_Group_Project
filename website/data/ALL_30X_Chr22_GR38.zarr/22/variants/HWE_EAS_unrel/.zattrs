@@ -1,0 +1,6 @@
+{
+    "Description": "HWE test in EAS (2504 unrelated samples) (PMID:15789306); 1=good, 0=bad",
+    "ID": "HWE_EAS_unrel",
+    "Number": "A",
+    "Type": "Float"
+}

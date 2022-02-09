@@ -1,0 +1,6 @@
+{
+    "Description": "Total number of alleles in called genotypes in SAS (2504 unrelated samples)",
+    "ID": "AN_SAS_unrel",
+    "Number": "1",
+    "Type": "Integer"
+}

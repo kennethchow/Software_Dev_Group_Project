@@ -1,0 +1,6 @@
+{
+    "Description": "Z-score from Wilcoxon rank sum test of Alt vs. Ref read position bias",
+    "ID": "ReadPosRankSum",
+    "Number": "1",
+    "Type": "Float"
+}

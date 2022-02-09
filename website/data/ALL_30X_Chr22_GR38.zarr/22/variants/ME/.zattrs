@@ -1,0 +1,6 @@
+{
+    "Description": "Mendelian error rate in trios with non-missing GT calls",
+    "ID": "ME",
+    "Number": "A",
+    "Type": "Float"
+}
