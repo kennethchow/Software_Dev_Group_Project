@@ -1,6 +1,0 @@
-{
-    "Description": "Total number of alleles in called genotypes in EUR (2504 unrelated samples)",
-    "ID": "AN_EUR_unrel",
-    "Number": "1",
-    "Type": "Integer"
-}

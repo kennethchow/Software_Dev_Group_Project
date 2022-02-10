@@ -1,6 +1,0 @@
-{
-    "Description": "Allele counts in heterozygous genotypes",
-    "ID": "AC_Het",
-    "Number": "A",
-    "Type": "Integer"
-}

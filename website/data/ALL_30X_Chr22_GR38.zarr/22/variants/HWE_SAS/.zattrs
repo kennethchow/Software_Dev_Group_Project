@@ -1,6 +1,0 @@
-{
-    "Description": "HWE test in SAS (PMID:15789306); 1=good, 0=bad",
-    "ID": "HWE_SAS",
-    "Number": "A",
-    "Type": "Float"
-}

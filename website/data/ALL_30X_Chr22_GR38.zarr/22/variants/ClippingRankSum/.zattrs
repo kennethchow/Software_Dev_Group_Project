@@ -1,6 +1,0 @@
-{
-    "Description": "Z-score From Wilcoxon rank sum test of Alt vs. Ref number of hard clipped bases",
-    "ID": "ClippingRankSum",
-    "Number": "1",
-    "Type": "Float"
-}

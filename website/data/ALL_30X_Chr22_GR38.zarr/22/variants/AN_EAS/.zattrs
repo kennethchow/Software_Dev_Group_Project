@@ -1,6 +1,0 @@
-{
-    "Description": "Total number of alleles in called genotypes in EAS",
-    "ID": "AN_EAS",
-    "Number": "1",
-    "Type": "Integer"
-}

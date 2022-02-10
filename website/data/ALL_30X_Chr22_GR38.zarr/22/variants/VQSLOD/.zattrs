@@ -1,6 +1,0 @@
-{
-    "Description": "Log odds of being a true variant versus being false under the trained gaussian mixture model",
-    "ID": "VQSLOD",
-    "Number": "1",
-    "Type": "Float"
-}

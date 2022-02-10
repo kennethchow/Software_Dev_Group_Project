@@ -1,6 +1,0 @@
-{
-    "Description": "Allele frequency in EAS",
-    "ID": "AF_EAS",
-    "Number": "A",
-    "Type": "Float"
-}

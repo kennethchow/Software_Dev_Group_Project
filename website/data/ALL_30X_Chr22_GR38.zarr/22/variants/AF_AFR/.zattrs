@@ -1,6 +1,0 @@
-{
-    "Description": "Allele frequency in AFR",
-    "ID": "AF_AFR",
-    "Number": "A",
-    "Type": "Float"
-}

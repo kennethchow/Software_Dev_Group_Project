@@ -1,6 +1,0 @@
-{
-    "Description": "Allele count in genotypes in AFR",
-    "ID": "AC_AFR",
-    "Number": "A",
-    "Type": "Integer"
-}

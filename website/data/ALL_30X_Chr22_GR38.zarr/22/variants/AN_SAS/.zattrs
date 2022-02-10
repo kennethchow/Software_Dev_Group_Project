@@ -1,6 +1,0 @@
-{
-    "Description": "Total number of alleles in called genotypes in SAS",
-    "ID": "AN_SAS",
-    "Number": "1",
-    "Type": "Integer"
-}

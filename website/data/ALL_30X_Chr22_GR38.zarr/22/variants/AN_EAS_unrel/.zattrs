@@ -1,6 +1,0 @@
-{
-    "Description": "Total number of alleles in called genotypes in EAS (2504 unrelated samples)",
-    "ID": "AN_EAS_unrel",
-    "Number": "1",
-    "Type": "Integer"
-}

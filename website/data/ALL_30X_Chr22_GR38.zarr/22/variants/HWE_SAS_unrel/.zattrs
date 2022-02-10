@@ -1,6 +1,0 @@
-{
-    "Description": "HWE test in SAS (2504 unrelated samples) (PMID:15789306); 1=good, 0=bad",
-    "ID": "HWE_SAS_unrel",
-    "Number": "A",
-    "Type": "Float"
-}

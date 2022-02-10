@@ -1,6 +1,0 @@
-{
-    "Description": "Total number of alleles in called genotypes in AFR (2504 unrelated samples)",
-    "ID": "AN_AFR_unrel",
-    "Number": "1",
-    "Type": "Integer"
-}

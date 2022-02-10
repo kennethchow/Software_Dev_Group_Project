@@ -1,6 +1,0 @@
-{
-    "Description": "Test excess heterozygosity in EAS; 1=good, 0=bad",
-    "ID": "ExcHet_EAS",
-    "Number": "A",
-    "Type": "Float"
-}

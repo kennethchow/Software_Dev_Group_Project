@@ -1,6 +1,0 @@
-{
-    "Description": "Allele counts in heterozygous genotypes in AFR",
-    "ID": "AC_Het_AFR",
-    "Number": "A",
-    "Type": "Integer"
-}

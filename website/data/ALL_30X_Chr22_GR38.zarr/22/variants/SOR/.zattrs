@@ -1,6 +1,0 @@
-{
-    "Description": "Symmetric Odds Ratio of 2x2 contingency table to detect strand bias",
-    "ID": "SOR",
-    "Number": "1",
-    "Type": "Float"
-}

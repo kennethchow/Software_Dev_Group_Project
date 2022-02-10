@@ -1,6 +1,0 @@
-{
-    "Description": "Allele counts in homozygous genotypes in EAS (2504 unrelated samples)",
-    "ID": "AC_Hom_EAS_unrel",
-    "Number": "A",
-    "Type": "Integer"
-}

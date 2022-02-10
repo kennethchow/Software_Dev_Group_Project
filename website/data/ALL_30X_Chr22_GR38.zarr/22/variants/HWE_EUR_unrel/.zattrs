@@ -1,6 +1,0 @@
-{
-    "Description": "HWE test in EUR (2504 unrelated samples) (PMID:15789306); 1=good, 0=bad",
-    "ID": "HWE_EUR_unrel",
-    "Number": "A",
-    "Type": "Float"
-}

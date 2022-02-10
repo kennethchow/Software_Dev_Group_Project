@@ -1,6 +1,0 @@
-{
-    "Description": "HWE test in AMR (2504 unrelated samples) (PMID:15789306); 1=good, 0=bad",
-    "ID": "HWE_AMR_unrel",
-    "Number": "A",
-    "Type": "Float"
-}

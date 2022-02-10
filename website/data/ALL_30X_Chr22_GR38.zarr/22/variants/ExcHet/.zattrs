@@ -1,6 +1,0 @@
-{
-    "Description": "Test excess heterozygosity; 1=good, 0=bad",
-    "ID": "ExcHet",
-    "Number": "A",
-    "Type": "Float"
-}

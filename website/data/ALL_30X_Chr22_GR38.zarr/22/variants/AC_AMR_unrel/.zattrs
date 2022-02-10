@@ -1,6 +1,0 @@
-{
-    "Description": "Allele count in genotypes in AMR (2504 unrelated samples)",
-    "ID": "AC_AMR_unrel",
-    "Number": "A",
-    "Type": "Integer"
-}
