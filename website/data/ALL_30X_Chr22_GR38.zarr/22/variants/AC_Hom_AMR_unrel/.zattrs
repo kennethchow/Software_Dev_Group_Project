@@ -1,0 +1,6 @@
+{
+    "Description": "Allele counts in homozygous genotypes in AMR (2504 unrelated samples)",
+    "ID": "AC_Hom_AMR_unrel",
+    "Number": "A",
+    "Type": "Integer"
+}

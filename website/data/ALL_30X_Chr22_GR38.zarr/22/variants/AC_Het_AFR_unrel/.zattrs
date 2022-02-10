@@ -1,0 +1,6 @@
+{
+    "Description": "Allele counts in heterozygous genotypes in AFR (2504 unrelated samples)",
+    "ID": "AC_Het_AFR_unrel",
+    "Number": "A",
+    "Type": "Integer"
+}
