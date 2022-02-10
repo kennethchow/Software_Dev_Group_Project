@@ -1,0 +1,6 @@
+{
+    "Description": "Consistency of the site with at most two segregating haplotypes",
+    "ID": "HaplotypeScore",
+    "Number": "1",
+    "Type": "Float"
+}
