@@ -1,0 +1,6 @@
+{
+    "Description": "Allele counts in heterozygous genotypes in SAS (2504 unrelated samples)",
+    "ID": "AC_Het_SAS_unrel",
+    "Number": "A",
+    "Type": "Integer"
+}

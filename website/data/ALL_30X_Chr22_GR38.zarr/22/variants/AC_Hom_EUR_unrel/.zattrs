@@ -1,0 +1,6 @@
+{
+    "Description": "Allele counts in homozygous genotypes in EUR (2504 unrelated samples)",
+    "ID": "AC_Hom_EUR_unrel",
+    "Number": "A",
+    "Type": "Integer"
+}

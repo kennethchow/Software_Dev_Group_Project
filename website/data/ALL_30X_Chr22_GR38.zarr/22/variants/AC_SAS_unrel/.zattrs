@@ -1,6 +1,0 @@
-{
-    "Description": "Allele count in genotypes in SAS (2504 unrelated samples)",
-    "ID": "AC_SAS_unrel",
-    "Number": "A",
-    "Type": "Integer"
-}
