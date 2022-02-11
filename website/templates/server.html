@@ -11,15 +11,19 @@
     <div class="container">
         <div style="margin-left: 20em;">
             <p>Please specify a query from the options listed below. </p>
-            <br>
             <form method="POST" action="" enctype="multipart/form-data">
               <!-- Grouping Data in a field set -->
               <fieldset>
 
               <!-- Genomic Coordinate - Chromosome start/end   -->
-              <p><label for="chromosomes"><b>Chromosome:</b></label>&nbsp;&nbsp;
+              <p><label for="chromosomes"><b>Chromosome:</b></label>&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
               <select id="chromosomes" name="chr">
-                <option value="22">22</option>
+                  <option value="" selected>--</option>
+                  <!-- Add options here equal to chromosomes uploaded   -->
+                  <option value="22">22</option>
+                  <option value="X">X</option>
+                  <option value="Y">Y</option>
+
               </select>
               <label for="chrstart">&nbsp;&nbsp;&nbsp;&nbsp;Start Position:</label>&nbsp;&nbsp;
               <input type="text" id="chrstart" name="chrstart" size="5">
@@ -28,12 +32,22 @@
               </p>
 
               <!-- SNP name (rs value)   -->
-              <p><label for="snpname"><b>SNP Name (rs value):</b></label>&nbsp;&nbsp;
-              <input type="text" id="snpname" name="snpname"></p>
+              <p><label for="snpname"><b>SNP Name (rs value):</b></label>&nbsp;&nbsp;&nbsp;&nbsp;
+              <input type="text" id="snpname" name="snpname" size="20"></p>
 
               <!-- Gene name (+ any associated aliases)   -->
-              <p><label for="genename"><b>Gene Name:</b></label>&nbsp;&nbsp;
-              <input type="text" id="genename" name="genename"></p>
+              <p><label for="genename"><b>Gene Name:</b></label>&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+              <input type="text" id="genename" name="genename" size="20"></p>
+
+            <br><p>Please enter an email and query identifier to be notified when query is complete. </p>
+
+              <!-- Email Address   -->
+              <p><label for="email_add"><b>Email Address:</b></label>&emsp;&emsp;&emsp;&emsp;
+              <input type="text" id="email_add" name="email_add" size="30"></p>
+
+              <!-- Unique Identifier   -->
+              <p><label for="unique_id"><b>Query Identifier:</b></label>&emsp;&emsp;&emsp;
+              <input type="text" id="unique_id" name="unique_id" size="30"></p>
 
             <br><div style="margin-left: 12.2em;">
             <button type="submit" class="btn btn-primary">Submit</button></div>
@@ -61,7 +75,7 @@
     {% else %}
         <div class="container">
              <br>
-            <div class="text-center">
+            <div style="margin-left: 26em;">
                 <p>Please register/ login to store results. </p>
             </div>
         </div>
