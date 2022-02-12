@@ -1,6 +1,0 @@
-{
-    "Description": "Allele frequency in SAS (2504 unrelated samples)",
-    "ID": "AF_SAS_unrel",
-    "Number": "A",
-    "Type": "Float"
-}

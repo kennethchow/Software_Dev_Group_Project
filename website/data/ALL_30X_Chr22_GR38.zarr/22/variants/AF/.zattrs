@@ -1,6 +1,0 @@
-{
-    "Description": "Allele Frequency, for each ALT allele, in the same order as listed",
-    "ID": "AF",
-    "Number": "A",
-    "Type": "Float"
-}

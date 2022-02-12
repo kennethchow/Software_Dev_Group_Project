@@ -1,6 +1,0 @@
-{
-    "Description": "Allele frequency in AFR (2504 unrelated samples)",
-    "ID": "AF_AFR_unrel",
-    "Number": "A",
-    "Type": "Float"
-}
