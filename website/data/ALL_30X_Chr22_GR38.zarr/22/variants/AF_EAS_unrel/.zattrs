@@ -1,0 +1,6 @@
+{
+    "Description": "Allele frequency in EAS (2504 unrelated samples)",
+    "ID": "AF_EAS_unrel",
+    "Number": "A",
+    "Type": "Float"
+}

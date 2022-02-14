@@ -1,0 +1,6 @@
+{
+    "Description": "Allele frequency in EUR (2504 unrelated samples)",
+    "ID": "AF_EUR_unrel",
+    "Number": "A",
+    "Type": "Float"
+}
