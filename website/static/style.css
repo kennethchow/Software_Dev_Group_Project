@@ -564,6 +564,33 @@ section {
 }
 
 /*--------------------------------------------------------------
+# Web Server
+--------------------------------------------------------------*/
+
+
+.table,
+.table tr,
+.table td {
+    background-color: white !important;
+}
+
+table.table-fit {
+    width: auto !important;
+    table-layout: auto !important;
+}
+table.table-fit thead th, table.table-fit tfoot th {
+    width: auto !important;
+}
+table.table-fit tbody td, table.table-fit tfoot td {
+    width: auto !important;
+}
+
+.table th {
+    background-color: #65788a !important;
+    color: #FFFFFF;
+}
+
+/*--------------------------------------------------------------
 # About
 --------------------------------------------------------------*/
 .about .icon-boxes h4 {
