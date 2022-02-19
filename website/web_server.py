@@ -4,6 +4,9 @@ from werkzeug.utils import secure_filename
 from flask_login import current_user, login_required
 import os, glob
 from website.data_proc import filter_data
+import pandas as pd
+import numpy as np
+import h5py
 
 
 # ======= Creating Route - Linked to __init__.py ======= #
@@ -25,7 +28,7 @@ def server():
         for f in file_list:
             os.remove(f)
 
-    # Create save dir if doesn't exist
+    # Create save dir if it doesn't exist
     os.makedirs(save_folder, exist_ok=True)
 
     # Return files currently saved in User-Specific or tmp directory:
@@ -50,18 +53,18 @@ def server():
                  request.form.get('hap_div'), request.form.get('fst'), request.form.get('daf')]
 
         pops = [request.form.get('AFR'), request.form.get('AMR'),
-                 request.form.get('EAS'), request.form.get('EUR'), request.form.get('SAS')]
+                request.form.get('EAS'), request.form.get('EUR'), request.form.get('SAS')]
 
         # --- ERROR HANDLING OF USER INPUT: --- #
         if not any(s.strip() for s in query_info):
             flash('Please enter query information.', category='error')
             return render_template('server.html')
 
-        elif any(s.strip() for s in query_info[0]) and not any(s.strip() for s in query_info[1:3]):
-            flash('Please enter a chromosome start and end position.', category='error')
+        elif not all(s.strip() for s in query_info[1:3]) and any(s.strip() for s in query_info[1:3]):
+            flash('Please enter both a chromosome start and end position.', category='error')
             return render_template('server.html')
 
-        elif int(query_info[1]) >= int(query_info[2]):
+        elif all(s.strip() for s in query_info[1:3]) and int(query_info[1]) >= int(query_info[2]):
             flash('Please ensure chromosome start position is before end position.', category='error')
             return render_template('server.html')
 
@@ -76,23 +79,51 @@ def server():
         for key, val in request.form.items():
             print(key, val)
 
+        # List of possible stats and populations:
+        poss_stats = ['seq_div', 'taj_d', 'hap_div', 'fst']
+        poss_pops = ['AFR', 'AMR', 'EAS', 'EUR', 'SAS']
+
+        # Returning the ones the user has chosen:
+        incl_stats = []
+        incl_pops = []
+
+        for stat in range(len(poss_stats)):
+            if stats[stat] == 'on':
+                incl_stats.append(poss_stats[stat])
+
+        for pop in range(len(poss_pops)):
+            if pops[pop] == 'on':
+                incl_pops.append(poss_pops[pop])
+
         # --- Running Statistics Function --- #
-        trial_pops = ['AFR', 'EUR', 'SAS']
-        trial_stats = ['seq_div', 'taj_d', 'hap_div']
+        stats_df, fst_df, ac_seg, seg_pos, variants = filter_data(chrom=chrom, start_pos=start_pos,
+                                                          stop_pos=stop_pos, rs_val=rs_val,
+                                                         gene_name=gene,
+                                                         stats=incl_stats, pops=incl_pops)
 
-        stats_headers, stats_data = filter_data(chrom=chrom, start_pos=start_pos, stop_pos=stop_pos, rs_val=rs_val,
-                                             gene_name=gene,
-                                             stats=trial_stats, pops=trial_pops)
+        # Saving files to tmp if not logged in, otherwise to user folder:
+        # Defining save locations
+        save_name = ['_stats_df.csv', '_fst_df.csv', '_ac_seg.h5', '_seg_pos.npy', '_variants.vcf']
+        save_locs = []
+        for s in range(len(save_name)):
+            save_l = save_folder + '/' + str(query_id) + save_name[s]
+            save_locs.append(save_l)
 
-        # Convert pandas dataframes to HTML tables:
-        #stats_html = stats_df.to_html(classes=["table-bordered", "table-striped", "table-hover"])
+        # Saving stats and fst data as csv files:
+        stats_df.to_csv(save_locs[0], index=False)
+        fst_df.to_csv(save_locs[1], index=False)
 
-            # file_save_loc = os.path.join(save_folder, str(filename))
-            # uploaded_file.save(file_save_loc)
-            #
-            # # Creating csv and image to save of AA usage:
-            # AAtypetable(file_save_loc, file_ext)
-            #
+        # Saving ac_seg to h5 file:
+        h5f = h5py.File(save_locs[2], mode='w')
+        h5f['ac_seg'] = ac_seg
+
+        # Saving seg_pos to numpy array:
+        np.save(save_locs[3], seg_pos)
+
+        # Saving variants file as vcf:
+        variants.to_vcf(save_locs[4])
+
+
             # # Delete tmp files if non logged-in user:
             # new_files = os.listdir(save_folder)
             # if user_id is None:
@@ -108,7 +139,7 @@ def server():
             #         if os.path.splitext(file)[1] != '.jpg':
             #             os.remove(os.path.join(save_folder, str(file)))
 
-        return render_template('results.html', headers=stats_headers, data=stats_data)
+        return render_template('results.html')
 
     return render_template('server.html', files=files)
 

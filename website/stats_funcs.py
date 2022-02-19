@@ -126,7 +126,7 @@ def create_data_table(pops, stats, stats_data):
     stat_headers = stats_df.columns.to_list()
     stats_data = stats_df.values
 
-    return stat_headers, stats_data
+    return stats_df
 
 
 def PopulationFiltering(pop_data, stats, pops, genotypes, phased_genotypes, variants):
@@ -160,6 +160,7 @@ def PopulationFiltering(pop_data, stats, pops, genotypes, phased_genotypes, vari
     # Boolean array of those SNPs that do segregate among the populations selected:
     is_seg = ac_subpops['ALL'].is_segregating()[:]
 
+    # print("Is Seg Contents: ", is_seg)
     # If there's only one value and it isn't segregated, then cannot calculate summary stats.
     if len(is_seg) == 1 and is_seg.all() == False:
         pop_stats = 'No segregating variants at this SNP.'
@@ -177,25 +178,36 @@ def PopulationFiltering(pop_data, stats, pops, genotypes, phased_genotypes, vari
             comb_stats = SummaryStats(stats, seg_pos, ac_seg, pop, pop_data, phased_genotypes)
             pop_stats.append(comb_stats)
 
+    # A string message is returned in the case there are no segregating variants:
+    if isinstance(pop_stats, str):
+        stats_df = pop_stats
+
+    else:
+        stats_df = create_data_table(pops, stats, pop_stats)
+
     """ Create Plots and Calc. Fst for Combinations of Populations """
 
     # Create a list of all the possible population combinations from those selected by the user:
     pop_combs = list(itertools.combinations(pops, 2))
 
-    # Working out fst for each pair of populations:
-    fst_comps = []
-    fst_col_vals = []
-    for c in range(len(pop_combs)):
-        num, den = allel.hudson_fst(ac_seg[pop_combs[c][0]],
-                                    ac_seg[pop_combs[c][1]])
-        fst = np.sum(num) / np.sum(den)
-        fst_comps.append(fst)
-        fst_col_vals.append("%s vs. %s" % (pop_dict[pop_combs[c][0]], pop_dict[pop_combs[c][1]]))
+    if 'fst' in stats:
+        # Working out fst for each pair of populations:
+        fst_comps = []
+        fst_col_vals = []
+        for c in range(len(pop_combs)):
+            num, den = allel.hudson_fst(ac_seg[pop_combs[c][0]],
+                                        ac_seg[pop_combs[c][1]])
+            fst = np.sum(num) / np.sum(den)
+            fst_comps.append(fst)
+            fst_col_vals.append("%s vs. %s" % (pop_dict[pop_combs[c][0]], pop_dict[pop_combs[c][1]]))
 
-    # Create a pandas dataframe using the fst stats:
-    fst_df = pd.DataFrame({'Populations Compared': fst_col_vals,
-                           'Fst Value': fst_comps},
-                          columns=['Populations Compared', 'Fst Value'])
-    fst_df = fst_df.fillna('***')
+        # Create a pandas dataframe using the fst stats:
+        fst_df = pd.DataFrame({'Populations Compared': fst_col_vals,
+                               'Fst Value': fst_comps},
+                              columns=['Populations Compared', 'Fst Value'])
+        fst_df = fst_df.fillna('***')
 
-    return pop_stats, fst_df
+    else:
+        fst_df = ""
+
+    return stats_df, fst_df, ac_seg, seg_pos

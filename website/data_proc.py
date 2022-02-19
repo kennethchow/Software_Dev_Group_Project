@@ -2,54 +2,57 @@ from website.stats_funcs import *
 import zarr
 import allel
 
-zarr_path = 'website/data/ALL_30X_Chr22_GR38.zarr'
+# Use disk as storage rather than memory:
+allel.chunked.storage_registry["default"] = allel.chunked.storage_zarr.ZarrTmpStorage()
+
+# Data Paths:
+zarr_path = 'website/data/FINAL_30x_GR38_NoBiIndel.zarr'
 pop_data_path = 'website/data/pop_data.panel'
 
-def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
 
+def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
     """ Loading the 1000 Genomes Data (Stored in dask array in zarr file) """
 
     # Opening the top level folder of the stored zarr file:
     callset = zarr.open_group(zarr_path, mode='r')
 
     # Determine which population-specific data to load:
-    pop_data_dict = {'AFR': 'AF_AFR_unrel',
-                     'AMR': 'AF_AMR_unrel',
-                     'EAS': 'AF_EAS_unrel',
-                     'EUR': 'AF_EUR_unrel',
-                     'SAS': 'AF_SAS_unrel',
+    pop_data_dict = {'AFR': ['AF_AFR', 'DAF_AFR', 'GF_HET_AFR', 'GF_HOM_REF_AFR', 'GF_HOM_ALT_AFR'],
+                     'AMR': ['AF_AMR', 'DAF_AMR', 'GF_HET_AMR', 'GF_HOM_REF_AMR', 'GF_HOM_ALT_AMR'],
+                     'EAS': ['AF_EAS', 'DAF_EAS', 'GF_HET_EAS', 'GF_HOM_REF_EAS', 'GF_HOM_ALT_EAS'],
+                     'EUR': ['AF_EUR', 'DAF_EUR', 'GF_HET_EUR', 'GF_HOM_REF_EUR', 'GF_HOM_ALT_EUR'],
+                     'SAS': ['AF_SAS', 'DAF_SAS', 'GF_HET_SAS', 'GF_HOM_REF_SAS', 'GF_HOM_ALT_SAS'],
                      }
     pop_var_data = []
     for pop in pops:
-        pop_var_data.append(pop_data_dict.get(pop))
+        [pop_var_data.append(x) for x in pop_data_dict[pop]]
 
     # Specifying default data to always load:
-    def_data = ['POS', 'REF', 'ALT', 'GENE', 'RS_VAL']
+    def_data = ['CHROM', 'POS', 'REF', 'ALT', 'GENE', 'RS_VAL']
     var_data = def_data + pop_var_data
 
     # Loading SNP Variants Data:
     variants = allel.VariantChunkedTable(callset[chrom]['variants'],
                                          names=var_data,
-                                         index='POS')
+                                         index=('CHROM', 'POS'))
 
     # Extract variant positions and store in array:
     pos = variants['POS'][:]
 
     # Loading Genotypes Data:
-    genotypes = allel.GenotypeChunkedArray(callset[chrom]['calldata']['GT'])
+    genotypes = allel.GenotypeChunkedArray(callset[chrom]['calldata']['GT_BI'])
 
     # Loading Phased Genotypes Data:
-    phased_genotypes = allel.GenotypeChunkedArray(callset[chrom]['calldata']['PH_GT'])
+    phased_genotypes = allel.GenotypeChunkedArray(callset[chrom]['calldata']['PH_GT_BI'])
 
     # Loading SNP Position data for Phased Genotypes:
     ph_pos = np.array(callset[chrom]['variants']['PH_POS'])
 
     # Loading population information:
-    pop_data = pd.read_csv(pop_data_path, sep = '\t')
+    pop_data = pd.read_csv(pop_data_path, sep='\t')
 
     # Drop any Unnamed columns:
     pop_data = pop_data.loc[:, ~pop_data.columns.str.contains('^Unnamed')]
-
 
     """ Filtering the data according to the user specifications """
 
@@ -168,21 +171,18 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
 
     """ Filtering and calculating according to populations and statistics chosen"""
 
+    # A string is returned for these dataframes if no matching SNPs for query:
     if isinstance(genotypes, str) | isinstance(variants, str):
         stats_df = 'Query returned no matches.'
-        fst_df = ''
+        fst_df = ""
+        ac_seg = ""
+        seg_pos = ""
 
     else:
-        pop_stats, fst_df = PopulationFiltering(pop_data, stats, pops, genotypes, phased_genotypes, variants)
+        stats_df, fst_df, ac_seg, seg_pos = PopulationFiltering(pop_data, stats,
+                                                                pops, genotypes, phased_genotypes, variants)
 
-        # A string message is returned in the case there are no segregating variants:
-        if isinstance(pop_stats, str):
-            stats_df = pop_stats
-
-        else:
-            stat_headers, stats_data = create_data_table(pops, stats, pop_stats)
-
-    return stat_headers, stats_data
+    return stats_df, fst_df, ac_seg, seg_pos, variants
 
 
 
