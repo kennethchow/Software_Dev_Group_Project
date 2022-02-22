@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}User Guide{% endblock %}
+{% block content%}
+
+<!-- ======= User Guide Section ======= -->
+    <section id="User Guide" class="User Guide">
+
+      <div class="container">
+
+            <br><br><br><br>
+
+          <div class = "row">
+              <h3><u><strong>Data Source</strong></u></h3>
+              <p>Pop.Genome supports the latest human genome assembly: the 1000 Genomes 30x on GRCh38, focusing on chromosome 22. More information on this dataset can be found by <a href="https://www.internationalgenome.org/data-portal/data-collection/30x-grch38">clicking here.</a></p>
+              <p>This dataset excludes the 698 related samples in the 30x dataset. Therefore, Pop.Genome focuses on unrelated samples. Reasoning for this is because related samples have the same genetics and would give unclear summary statistical results. Pop.Genome only focuses on SNPs, therefore, the dataset used contains non-indels and excludes the indels, to also reduce the variation which can have an impact on the SNPs. Pop.Genome also focuses on biallelic sites, since human SNPs are more common to be biallelic than multi-allelic, and would obtain concordant results for the summary statistics. </p>
+              <p>Pop.Genome contains a genotypes dataset, more information on the dataset can be found through this link: <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/">Genotypes Data.</a> Pop.Genome also has a phased genotypes dataset which is used to calculate haplotype diversity, more information on this dataset can be found through this link: <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_phased/">Phased Genotypes Data.</a></p>
+              <br><br><br>
+
+          <div class="row">
+              <h3><u><strong>Input Format</strong></u></h3>
+              <br><br>
+              <p>Pop.Genome accepts different forms of query input data. The general query which accepts the gene name, start and stop of the SNP position, and the rsID of the SNP. The population query allows the user to select which populations they want to investigate. The summary statistics query allows the users to select which summary statistic they want to calculate. <br>The queries for the input format are explained in more details below.</p>
+              <br>
+              <h5><strong>General Query</strong></h5>
+              <p>Users can specify one, or all, of either:</p>
+              <p><em>Gene Name:</em> User should specify the desirable gene they want to investigate</p>
+              <p><em>rsID name:</em> User should specify the position of the SNP (eg. rs1290354662)</p>
+              <p><em>Start position:</em> User should specify the start position of the SNP they want to investigate</p>
+              <p><em>Stop position:</em> User should specify the stop position of the SNP they want to investigate</p>
+
+              <br><br>
+              <h5><strong>Population Query</strong></h5>
+              <p>Users will be able to specify which population they want to select and find information on. In addition, to the option of also selecting another population where both of those populations will be compared when producing the summary statistics. </p>
+              <p>Users choice of populations are:</p>
+              <ul>
+                  <li><em>African (AFR):</em> Within the dataset there is a total of 661 samples</li>
+                  <li><em>European (EUR):</em> Within the dataset there is a total of 503 samples</li>
+                  <li><em>East Asian (EAS):</em> Within the dataset there is a total of 504 samples</li>
+                  <li><em>Mixed American (AMR):</em> Within the dataset there is a total of 347 samples</li>
+                  <li><em>South Asian (SAS):</em> Within the dataset there is a total of 489 samples</li>
+              </ul>
+
+          </div>
+
+              <br><br>
+              <h5><strong>Summary Statistics Query</strong></h5>
+              <p>Users will be able to specify which summary statistics they want to view after specifying the general queries and selecting which population they want</p>
+              <p>Users choice of summary statistics are:</p>
+              <ul>
+                  <li>Tajima's D</li>
+                  <li>Fst values</li>
+                  <li>Genetic Diversity</li>
+                  <li>Haplotype Diversity</li>
+                  <li>Derived Allele Frequency</li>
+              </ul>
+
+
+          <div class="row">
+              <h3><u><strong>Summary Statistics</strong></u></h3>
+              <p>Pop.Genome provides users with a set of summary statistics that they are able to select which ones
+                  they want. When users specify the summary statistics they want, Pop.Genome22 will return a set of
+                  values from each summary statistic and present a sliding window for them too. <br> <br>
+              The summary statistics that Pop.Genome will be returning for the user are: </p>
+
+              <br> <br> <br>
+              <h5><strong>Genotype Frequency</strong></h5>
+              <p>Pop.Genome provides the users with the genotype frequency of each individual population. Genotype frequency is the prevalence or ratio of genotypes in a given population. It ranges from 0 < f < 1. When focusing on one population the genotype frequency is the number of individuals from a certain genotype divided by the total number of individuals in the specified population. </p>
+              <p><em><strong>High values</strong></em> of genotype frequency for heterozygous alleles within a population indicate that those alleles have increased heterozygosity in the population. <em><strong>High values</strong></em> of genotype frequency for homozygous reference alleles and homozygous alternate alleles within a population indicate that those alleles (reference and/or alternate) have increased homozygosity in the population.</p>
+              <p><em><strong>Low values</strong></em> of genotype frequency for heterozygous alleles within a population indicate that there is less heterozygosity in the alleles, but there is more homozygosity in the alleles in the population. <em><strong>Low values</strong></em> of genotype frequency for homozygous reference alleles and homozygous alternate alleles within the population indicate that those alleles (reference and/or alternate) have less homozygosity in the alleles, but there is increased heterozygosity in the alleles in the population.</p>
+              <br>
+
+              <h5><strong>Allele Frequency</strong></h5>
+              <p>Pop.Genome provides the users with the allele frequency of each individual population. Allele frequency is the prevalence of a gene variant within a given population. Allele frequency is measured by dividing the number of times the given allele is presented in a population by the total number of copies of all the alleles at that specific genetic location in the selected population. </p>
+              <br>
+
+              <h5><strong>Tajima's D</strong></h5>
+              <p>Pop.Genome provides the users with the statistical test for neutrality (Tajima’s D) for comparing two of the populations selected by the users. Tajima’s D is a type of test that differentiates a randomly evolving DNA sequence between one that is non-randomly evolving. Tajima’s D is mainly used to identify sequences that do not apply to the neutral theory model at equilibrium due to mutation-drift.</p>
+              <br>
+
+              <h5><strong>Fst Value</strong></h5>
+              <p>Pop.Genome provides the users with Fst values for each of the populations that the users have selected., also presenting them as a sliding window. Fst refers to the ratio of the total genetic variance embedded in a subpopulation. Fst values range from 0 to 1.</p>
+              <br>
+
+              <h5><strong>Genetic Diversity</strong></h5>
+              <p>Pop.Genome provides the user with the genetic diversity of the individual population that has been specified. Genetic diversity makes reference to the different attributes a species has inherited, by focusing on the variations there are on the alleles. To calculate the genetic diversity in a population, Pop.Genome uses the Watterson estimator. </p>
+              <br>
+
+              <h5><strong>Haplotype Diversity</strong></h5>
+              <p>Pop.Genome provides the users with the haplotype diversity for the selected population. Haplotype diversity makes reference to the probability that two randomly sampled alleles are different between each other, it ranges from 0 to 1.</p>
+              <br>
+
+              <h5><strong>Derived Allele Frequency</strong></h5>
+              <p>Pop.Genome provides the user with another statistical test for neutrality (Derived Allele Frequency). Derived Allele Frequency (DAF) refers to the frequency that a mutated allele is present in a population. </p>
+              <br>
+          </div>
+
+
+          <div class="row">
+              <h3><u><strong>Interpretation of Summary Statistic Results</strong></u></h3>
+              <p> Pop.Genome has a set of summary statistics that the users can select their preferred ones. <br>
+              The interpretation of these results are explained below. </p>
+
+              <br><br>
+
+              <h5><strong>Genotype Frequency</strong></h5>
+              <p></p>
+
+
+              <h5><strong>Allele Frequency</strong></h5>
+              <p>Allele frequency can provide information if there is any genetic diversity within a population. If there is a change in the allele frequency it can illustrate that there is a genetic drift taking place or that there is the presence of new mutations in the population. </p>
+              <p>A <strong>high</strong> value in allele frequency indicates that there is more variation within the population. Therefore, there is a high chance that a mutation has occurred somewhere in the human lineage and is found in the majority of the population. </p>
+              <p>A <strong>low</strong> value in allele frequency indicates that there is less variation within the population. Therefore, this means that a mutation has occurred in the human lineage but it is only shown in the minority of the population. </p>
+              <br>
+
+              <h5><strong>Tajima's D</strong></h5>
+              <p>The values for tajima’s D can be both negative and positive, depending on what the value is, it indicates different things. </p>
+              <p>If the <em><strong>Tajima’s D = 0</strong></em> it indicates that the observed variation is complementary to the expected variation. Also, it means that there is no indication of selection, and that the population evolves in equilibrium due to mutation-drift.</p>
+              <p>If the <em><strong>Tajima’s D < 0 (negative)</strong></em> it indicates that there are less haplotypes, therefore decreasing heterozygosity. This implies that there is overabundance of rare alleles. Furthermore, it indicates an expansion in the population size and balancing selection.</p>
+              <p>If the <em><strong>Tajima’s D > 0 (positive)</strong></em> it indicates that there are additional haplotypes, therefore increasing heterozygosity. This implies that there is absence of rare alleles. Furthermore, it indicates a reduction in population size and balancing selection. </p>
+              <br>
+
+              <h5><strong>Fst Values</strong></h5>
+              <p>The Fst values as mentioned above range from 0 to 1. When the value is zero it is said to be a negative value, indicating that there is no genetic difference between the populations selected. </p>
+              <p><em><strong>High Fst values</strong></em> indicate that there is a significant degree of genetic differentiation between the populations that have been selected by the users or that they have strong population subdivision.</p>
+              <p><em><strong>Low Fst values</strong></em> indicate that there is absence of a significant degree of genetic differentiation between the selected populations by the users or lack of population subdivision. </p>
+              <br>
+
+              <h5><strong>Genetic Diversity</strong></h5>
+              <p>The <em><strong>higher the levels of genetic diversity</strong></em> there is within a population the higher the chance the individuals in that population will survive changes in the environment. As well as emerging diseases and/or epidemics. A <em><strong>high value</strong></em> of genetic diversity indicates that the individuals in the population present a broad array of distinct traits.</p>
+              <p>The <em><strong>lower the level of genetic diversity</strong></em> makes it harder for the individuals in the population to evolve, and decreases the likelihood of survival if there are any environmental changes. <em><strong>Low values</strong></em> of genetic diversity imply that the individuals in the population present a limited array of distinct traits.  </p>
+              <br>
+
+              <h5><strong>Haplotype Diversity</strong></h5>
+              <p>Haplotype diversity represents a probability, and values range from 0 to 1.</p>
+              <p><em><strong>High values of haplotype diversity</strong></em> indicate that there is a higher probability that the alleles within the population are different to each other. Indicating there is increased heterozygosity. </p>
+              <p><em><strong>Low values of haplotype diversity</strong></em> indicate that there is reduced probability that the alleles within the population are similar to each other. Indicating there is increased homozygosity.</p>
+              <br>
+
+              <h5><strong>Derived Allele Frequency</strong></h5>
+              <p>Derived Allele Frequency (DAF) is a statistical distribution test for neutrality in population genetics, its values range from 0 to 1. </p>
+              <p><em><strong>High value of DAF</strong></em> indicates that a mutation is present somewhere on the human lineage and it is identified in  95% of the humans from the population. These high values of DAF could be due to positive selection, weak balancing selection, likelihood allele will be fixed depending if the population size is low.</p>
+              <p><em><strong>Low value of DAF</strong></em> indicates that a mutation is present in the human lineage but is only identified in 5% of the humans from the population.</p>
+
+
+          </div>
+
+
+          <div class="row">
+              <h3><u><strong>Output Format</strong></u></h3>
+              <p>Pop.Genome presents the summary statistics results from what the user has specified in the queries in a table format. Some of the summary statistics (Tajima’s D, Fst Values, Genetic Diversity) are also presented as a sliding window.</p>
+              <p>If the users have queried for more than one SNP, the table will provide each individual SNP.</p>
+              <p>The table that will be provided for the users with the results from the summary statistics will contain the following columns:</p>
+              <br>
+              <ul>
+                  <li><strong>CHROM =</strong> The chromosome number</li>
+                  <li><strong>POS =</strong> The position of the SNP or of each SNP the users have queried</li>
+                  <li><strong>REF =</strong> The reference alleles of the SNP or of each SNP the users have queried</li>
+                  <li><strong>ALT =</strong> The alternate alleles of the SNP or of each SNP the users have queried</li>
+                  <li><strong>GENE =</strong> The gene name the users want to query</li>
+                  <li><strong>AA =</strong> Ancestral allele</li>
+                  <li><strong>AF_AFR =</strong> Allele frequency from African population.</li>
+                  <li><strong>AF_AMR =</strong> Allele frequency from Mixed American population.</li>
+                  <li><strong>AF_EAS =</strong> Allele frequency from East Asian population.</li>
+                  <li><strong>AF_EUR =</strong> Allele frequency from European population.</li>
+                  <li><strong>AF_SAS =</strong> Allele frequency from South Asian population.</li>
+                  <li><strong>DAF_AFR =</strong> Derived allele frequency from African population.v</li>
+                  <li><strong>DAF_AMR =</strong> Derived allele frequency from Mixed American population.</li>
+                  <li><strong>DAF_EAS =</strong> Derived allele frequency from East Asian population.</li>
+                  <li><strong>DAF_EUR =</strong> Derived allele frequency from European population.</li>
+                  <li><strong>DAF_SAS =</strong> Derived allele frequency from South Asian population.</li>
+                  <li><strong>GF_HET_AFR =</strong> Genotype frequency of heterozygous African population.</li>
+                  <li><strong>GF_HOM_REF_AFR =</strong> Genotype frequency of homozygous reference alleles on African population.</li>
+                  <li><strong>GF_HOM_ALT_AFR =</strong> Genotype frequency of homozygous alternate alleles on African population.</li>
+                  <li><strong>GF_HET_AMR =</strong> Genotype frequency of heterozygous Mixed American population.</li>
+                  <li><strong>GF_HOM_REF_AMR =</strong> Genotype frequency of homozygous reference alleles on Mixed American population.</li>
+                  <li><strong>GF_HOM_ALT_AMR =</strong> Genotype frequency of homozygous alternate alleles on Mixed American population.</li>
+                  <li><strong>GF_HET_EAS =</strong> Genotype frequency of heterozygous East Asian population.</li>
+                  <li><strong>GF_HOM_REF_EAS =</strong> Genotype frequency of homozygous reference alleles on East Asian population.</li>
+                  <li><strong>GF_HOM_ALT_EAS =</strong> Genotype frequency of homozygous alternate alleles on East Asian population.</li>
+                  <li><strong>GF_HET_EUR =</strong> Genotype frequency of heterozygous European population.</li>
+                  <li><strong>GF_HOM_REF_EUR =</strong> Genotype frequency of homozygous reference alleles on European population.</li>
+                  <li><strong>GF_HOM_ALT_EUR =</strong> Genotype frequency of homozygous alternate alleles on European population.</li>
+                  <li><strong>GF_HET_SAS =</strong> Genotype frequency of heterozygous South Asian population.</li>
+                  <li><strong>GF_HOM_REF_SAS =</strong> Genotype frequency of homozygous reference alleles on South Asian population.</li>
+                  <li><strong>GF_HOM_ALT_SAS =</strong> Genotype frequency of homozygous alternate alleles on South Asian population.</li>
+              </ul>
+
+
+
+          </div>
+
+
+    </section><!-- End Server Section -->
+
+{% endblock %}
