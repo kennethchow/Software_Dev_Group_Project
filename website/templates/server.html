@@ -141,13 +141,13 @@
     {% if session['logged_in'] == True %}
       <div class="section-title">
           <br> <br> <br>
-        <h2>Prior Results</h2>
+        <h2>Prior Queries</h2>
       </div>
         <ul>
-        {% for file in files %}
+        {% for query in query_ids %}
             <div class="container">
                 <div class="text-center">
-                    <a href="{{ url_for('web_server.uploads', filename=file) }}">{{file}}</a>
+                    <a href="/dash/{{user_id}}/{{query}}">Query Unique ID: {{query}}</a>
                 </div>
             </div>
         {% endfor %}
