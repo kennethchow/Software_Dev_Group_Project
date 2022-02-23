@@ -32,11 +32,12 @@ def create_app():
     from .auth import auth
     from .web_server import web_server
 
+    # Register blueprints
     app.register_blueprint(basic_pgs, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(web_server, url_prefix='/')
 
-    from .models import User, Note
+    from .models import User
     create_database(app)
 
     login_manager = LoginManager()
@@ -47,11 +48,14 @@ def create_app():
     def load_user(id):
         return User.query.get(int(id))
 
+    # Instantiate Dash over Flask App:
+    from .dashboard import init_dashboard
+    app = init_dashboard(app)
+
     return app
 
 
 def create_database(app):
     if not path.exists('website/' + DB_NAME):
         db.create_all(app=app)
-        print('Created Database!')
 
