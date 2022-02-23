@@ -6,18 +6,11 @@ import itertools
 
 # ======= Dictionaries used to Create Tables of Data to Display ======= #
 
-pop_dict = {'AFR': 'African',
-           'AMR': 'Ad. Mixed American',
-           'EAS': 'East Asian',
-           'EUR': 'European',
-           'SAS': 'South Asian',
-              }
-stats_dict = {'seq_div': 'Sequence Diversity',
-           'hap_div': 'Haplotype Diversity',
-           'taj_d': 'Tajima\'s D',
-           'fst': 'Fst',
-           'daf': 'Derived Allele Frequency',
-              }
+pop_dict = {'AFR': 'African', 'AMR': 'Ad. Mixed American', 'EAS': 'East Asian',
+            'EUR': 'European', 'SAS': 'South Asian'}
+
+stats_dict = {'seq_div': 'Nucleotide Diversity', 'hap_div': 'Haplotype Diversity',
+              'taj_d': 'Tajima\'s D', 'fst': 'Fst', 'daf': 'Derived Allele Frequency'}
 
 
 # ======= Functions used to process the Chromosome VCF Data and create the summary stats ======= #
@@ -79,7 +72,7 @@ def SummaryStats(stats, seg_pos, ac_seg, pop, pop_data, phased_genotypes):
 
     if 'hap_div' in stats:
         # If there is no matching phased genotype then hap diversity cannot be calculated:
-        if phased_genotypes != 0:
+        if not isinstance(phased_genotypes, str):
             # Create Boolean array classifying population membership:
             sample_selection = pop_data.super_pop.isin({pop}).values
 
@@ -160,9 +153,9 @@ def PopulationFiltering(pop_data, stats, pops, genotypes, phased_genotypes, vari
     # Boolean array of those SNPs that do segregate among the populations selected:
     is_seg = ac_subpops['ALL'].is_segregating()[:]
 
-    # print("Is Seg Contents: ", is_seg)
-    # If there's only one value and it isn't segregated, then cannot calculate summary stats.
-    if len(is_seg) == 1 and is_seg.all() == False:
+    #print("Is Seg Contents: ", is_seg)
+    # If there are no segregating variants, then cannot calculate summary stats.
+    if not any(is_seg):
         pop_stats = 'No segregating variants at this SNP.'
 
     else:
@@ -181,33 +174,35 @@ def PopulationFiltering(pop_data, stats, pops, genotypes, phased_genotypes, vari
     # A string message is returned in the case there are no segregating variants:
     if isinstance(pop_stats, str):
         stats_df = pop_stats
+        fst_df = ""
+        ac_seg = ""
+        seg_pos = ""
 
     else:
         stats_df = create_data_table(pops, stats, pop_stats)
 
-    """ Create Plots and Calc. Fst for Combinations of Populations """
+        """ Calc. Fst for Combinations of Populations """
+        # Create a list of all the possible population combinations from those selected by the user:
+        pop_combs = list(itertools.combinations(pops, 2))
 
-    # Create a list of all the possible population combinations from those selected by the user:
-    pop_combs = list(itertools.combinations(pops, 2))
+        if 'fst' in stats:
+            # Working out fst for each pair of populations:
+            fst_comps = []
+            fst_col_vals = []
+            for c in range(len(pop_combs)):
+                num, den = allel.hudson_fst(ac_seg[pop_combs[c][0]],
+                                            ac_seg[pop_combs[c][1]])
+                fst = np.sum(num) / np.sum(den)
+                fst_comps.append(fst)
+                fst_col_vals.append("%s vs. %s" % (pop_dict[pop_combs[c][0]], pop_dict[pop_combs[c][1]]))
 
-    if 'fst' in stats:
-        # Working out fst for each pair of populations:
-        fst_comps = []
-        fst_col_vals = []
-        for c in range(len(pop_combs)):
-            num, den = allel.hudson_fst(ac_seg[pop_combs[c][0]],
-                                        ac_seg[pop_combs[c][1]])
-            fst = np.sum(num) / np.sum(den)
-            fst_comps.append(fst)
-            fst_col_vals.append("%s vs. %s" % (pop_dict[pop_combs[c][0]], pop_dict[pop_combs[c][1]]))
+            # Create a pandas dataframe using the fst stats:
+            fst_df = pd.DataFrame({'Populations Compared': fst_col_vals,
+                                   'Fst Value': fst_comps},
+                                  columns=['Populations Compared', 'Fst Value'])
+            fst_df = fst_df.fillna('***')
 
-        # Create a pandas dataframe using the fst stats:
-        fst_df = pd.DataFrame({'Populations Compared': fst_col_vals,
-                               'Fst Value': fst_comps},
-                              columns=['Populations Compared', 'Fst Value'])
-        fst_df = fst_df.fillna('***')
-
-    else:
-        fst_df = ""
+        else:
+            fst_df = ""
 
     return stats_df, fst_df, ac_seg, seg_pos

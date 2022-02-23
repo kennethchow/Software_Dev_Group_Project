@@ -173,7 +173,7 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
 
     # A string is returned for these dataframes if no matching SNPs for query:
     if isinstance(genotypes, str) | isinstance(variants, str):
-        stats_df = 'Query returned no matches.'
+        stats_df = "Query returned no matching SNPs."
         fst_df = ""
         ac_seg = ""
         seg_pos = ""
