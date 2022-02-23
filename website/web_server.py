@@ -34,6 +34,15 @@ def server():
     # Return files currently saved in User-Specific or tmp directory:
     files = os.listdir(save_folder)
 
+    # If user is logged in return Unique Query ID's of prior searches (to display links to prior results):
+    if user_id is not None:
+        # Using a unique dataframe name to extract number of prior queries:
+        sub_str = '_stats_df.csv'
+        new_files = [s for s in files if sub_str in s]
+        user_query_ids = [x.replace(sub_str, '') for x in new_files]
+    else:
+        user_query_ids = None
+
     if request.method == 'POST':
         # Query Information:
         chrom = request.form.get('chr')
@@ -76,8 +85,12 @@ def server():
             flash('Please enter an email address and a query id.', category='error')
             return render_template('server.html')
 
-        for key, val in request.form.items():
-            print(key, val)
+        elif (user_query_ids != None) and (query_id in user_query_ids):
+            flash('Please choose a query ID not previously used.', category='error')
+            return render_template('server.html')
+
+        #for key, val in request.form.items():
+            #print(key, val)
 
         # List of possible stats and populations:
         poss_stats = ['seq_div', 'taj_d', 'hap_div', 'fst']
@@ -97,13 +110,20 @@ def server():
 
         # --- Running Statistics Function --- #
         stats_df, fst_df, ac_seg, seg_pos, variants = filter_data(chrom=chrom, start_pos=start_pos,
-                                                          stop_pos=stop_pos, rs_val=rs_val,
-                                                         gene_name=gene,
-                                                         stats=incl_stats, pops=incl_pops)
+                                                                    stop_pos=stop_pos, rs_val=rs_val,
+                                                                    gene_name=gene,
+                                                                    stats=incl_stats, pops=incl_pops)
 
-        # Saving files to tmp if not logged in, otherwise to user folder:
+        # Checking whether query has run successfully, a string message is returned by stats_df if it has not:
+        if isinstance(stats_df, str):
+            flash(stats_df, category='error')          # stats_df contains the reason why
+            return render_template('server.html')
+
+        """ Saving data associated with User Query """
+        # Saving files to tmp if not logged in, otherwise to specific user folder:
         # Defining save locations
-        save_name = ['_stats_df.csv', '_fst_df.csv', '_ac_seg.h5', '_seg_pos.npy', '_variants.vcf']
+        save_name = ['_stats_df.csv', '_fst_df.csv', '_ac_seg.h5', '_seg_pos.npy',
+                     '_variants.vcf', '_import_fields.csv']
         save_locs = []
         for s in range(len(save_name)):
             save_l = save_folder + '/' + str(query_id) + save_name[s]
@@ -111,7 +131,12 @@ def server():
 
         # Saving stats and fst data as csv files:
         stats_df.to_csv(save_locs[0], index=False)
-        fst_df.to_csv(save_locs[1], index=False)
+
+        # If fst hasn't been selected by user (it'll eb an empty string), then don't create csv:
+        if not isinstance(fst_df, str):
+            fst_df.to_csv(save_locs[1], index=False)
+        else:
+            pass
 
         # Saving ac_seg to h5 file:
         h5f = h5py.File(save_locs[2], mode='w')
@@ -123,25 +148,20 @@ def server():
         # Saving variants file as vcf:
         variants.to_vcf(save_locs[4])
 
+        # Saving names of fields in variants file to csv for later import:
+        import_fields_df = pd.DataFrame(variants.names)
+        import_fields_df.to_csv(save_locs[5], index=False, header=None)
 
-            # # Delete tmp files if non logged-in user:
-            # new_files = os.listdir(save_folder)
-            # if user_id is None:
-            #     for file in new_files:
-            #         # If not a .jpg, download the file for the non-logged in user:
-            #         if os.path.splitext(file)[1] == '.jpg':
-            #             full_path = os.path.join(current_app.root_path, 'uploads', 'tmp')
-            #             print("FILE NAME: ", file)
-            #             return send_from_directory(full_path, file, as_attachment=True)
-            #
-            # else:     # delete all but the .jpg image file for logged-in users
-            #     for file in new_files:
-            #         if os.path.splitext(file)[1] != '.jpg':
-            #             os.remove(os.path.join(save_folder, str(file)))
+        """ Routing user to Dash Application"""
+        # Set dash location for flask to re-route to
+        if user_id is not None:
+            dash_route = '/dash/' + user_id + '/' + query_id
+        else:
+            dash_route = '/dash/' + 'tmp/' + query_id
 
-        return render_template('results.html')
+        return redirect(dash_route)
 
-    return render_template('server.html', files=files)
+    return render_template('server.html', query_ids=user_query_ids, user_id=user_id)
 
 
 @web_server.route('/uploads/<filename>', methods=['GET', 'POST'])
@@ -157,6 +177,5 @@ def tmp_uploads(filename):
     return send_from_directory(full_path, filename, as_attachment=True)
 
 
-@web_server.route('/results', methods=['GET', 'POST'])
-def results():
-    return render_template('results.html')
+
+
