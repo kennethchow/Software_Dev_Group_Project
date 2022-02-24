@@ -192,7 +192,10 @@ def PopulationFiltering(pop_data, stats, pops, genotypes, phased_genotypes, vari
             for c in range(len(pop_combs)):
                 num, den = allel.hudson_fst(ac_seg[pop_combs[c][0]],
                                             ac_seg[pop_combs[c][1]])
-                fst = np.sum(num) / np.sum(den)
+                try:
+                    fst = np.sum(num) / np.sum(den)
+                except:
+                    fst = 0
                 fst_comps.append(fst)
                 fst_col_vals.append("%s vs. %s" % (pop_dict[pop_combs[c][0]], pop_dict[pop_combs[c][1]]))
 

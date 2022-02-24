@@ -28,7 +28,7 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
         [pop_var_data.append(x) for x in pop_data_dict[pop]]
 
     # Specifying default data to always load:
-    def_data = ['CHROM', 'POS', 'REF', 'ALT', 'GENE', 'RS_VAL']
+    def_data = ['CHROM', 'POS', 'REF', 'ALT', 'GENE', 'RS_VAL', 'AA']
     var_data = def_data + pop_var_data
 
     # Loading SNP Variants Data:

@@ -77,6 +77,10 @@ def server():
             flash('Please ensure chromosome start position is before end position.', category='error')
             return render_template('server.html')
 
+        elif all(s.strip() for s in query_info[1:3]) and ((int(query_info[2]) - int(query_info[1])) > 1000000):
+            flash('Please restrict your search query to 1 Mb or less.', category='error')
+            return render_template('server.html')
+
         elif any(s.strip() for s in query_info[2:3]) and not any(s.strip() for s in query_info[0]):
             flash('Please select a chromosome.', category='error')
             return render_template('server.html')
@@ -89,8 +93,6 @@ def server():
             flash('Please choose a query ID not previously used.', category='error')
             return render_template('server.html')
 
-        #for key, val in request.form.items():
-            #print(key, val)
 
         # List of possible stats and populations:
         poss_stats = ['seq_div', 'taj_d', 'hap_div', 'fst']
