@@ -24,7 +24,7 @@ def get_data(uid, r=4):
                                        alt_number=1)
 
     # Rounding Data:
-    main_data[import_fields[6::]] = main_data[import_fields[6::]].astype(
+    main_data[import_fields[7::]] = main_data[import_fields[7::]].astype(
         str).astype(float).round(r)
 
     # Get summary CSVs
@@ -161,14 +161,14 @@ def display_data(uid):
                     [html.Div([
                         html.Div(
                             [
-                                html.H6("""Window Size""",
+                                html.H6("""Window Size (bp)""",
                                         style={'margin-right': '2em'})
                             ],
                         ),
                         dcc.Input(
                             id='window',
                             type='number',
-                            value=10,
+                            value=1000,
                             min=1)
                     ],
                         style={'display': 'flex'}, ),
@@ -252,7 +252,7 @@ def init_callbacks(dash_app):
                   'GF_HOM_REF_AMR', 'GF_HOM_ALT_AMR', 'GF_HET_EAS', 'GF_HOM_REF_EAS',
                   'GF_HOM_ALT_EAS', 'GF_HET_EUR', 'GF_HOM_REF_EUR', 'GF_HOM_ALT_EUR',
                   'GF_HET_SAS', 'GF_HOM_REF_SAS', 'GF_HOM_ALT_SAS']
-        d_cols = ['CHROM', 'POS', 'REF', 'ALT', 'GENE', 'RS_VAL', 'DAF_AFR', 'DAF_AMR',
+        d_cols = ['CHROM', 'POS', 'REF', 'ALT', 'AA', 'RS_VAL', 'DAF_AFR', 'DAF_AMR',
                   'DAF_EAS', 'DAF_EUR', 'DAF_SAS']
 
         # Returning the actual column values given by the user selection:
@@ -285,7 +285,7 @@ def init_callbacks(dash_app):
 
             fig = px.line(seq_plot_df, x="chrom_pos", y="seq_div",
                           color="population", hover_name="population",
-                          labels=dict(chrom_pos="Chromosome Position",
+                          labels=dict(chrom_pos="Chromosome Position (bp)",
                                       seq_div="Nucleotide Diversity",
                                       population="Population"
                                       )
@@ -309,10 +309,11 @@ def init_callbacks(dash_app):
 
         if w and p1 and p2 is not None:
             seq_plot_df = plot_data_tajimas(sp_df, ac_df, p1, p2, w)
+            seq_plot_df.to_csv('seq_plot.csv', index=False, header=None)
 
             fig = px.line(seq_plot_df, x="chrom_pos", y="tajima_d",
                           color="population", hover_name="population",
-                          labels=dict(chrom_pos="Chromosome Position",
+                          labels=dict(chrom_pos="Chromosome Position (bp)",
                                       tajima_d="Tajima's D",
                                       population="Population"
                                       )
