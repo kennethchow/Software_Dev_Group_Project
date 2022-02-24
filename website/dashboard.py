@@ -317,11 +317,10 @@ def init_callbacks(dash_app):
         _, _, _, sp_df, ac_df = get_data(uid)
 
         if w and p1 and p2 is not None:
-            seq_plot_df = plot_data_tajimas(sp_df, ac_df, p1, p2, w)
-            seq_plot_df.to_csv('seq_plot.csv', index=False, header=None)
+            taj_plot_df = plot_data_tajimas(sp_df, ac_df, p1, p2, w)
 
             try:
-                fig = px.line(seq_plot_df, x="chrom_pos", y="tajima_d",
+                fig = px.line(taj_plot_df, x="chrom_pos", y="tajima_d",
                               color="population", hover_name="population",
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           tajima_d="Tajima's D",
@@ -329,7 +328,7 @@ def init_callbacks(dash_app):
                                           )
                               )
             except ValueError:
-                fig = px.line(seq_plot_df, x="chrom_pos", y="tajima_d",
+                fig = px.line(taj_plot_df, x="chrom_pos", y="tajima_d",
                               color="population", hover_name="population",
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           tajima_d="Tajima's D",
