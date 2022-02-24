@@ -20,6 +20,8 @@
               <h3><u><strong>Input Format</strong></u></h3>
               <br><br>
               <p>Pop.Genome accepts different forms of query input data. The general query which accepts the gene name, start and stop of the SNP position, and the rsID of the SNP. The population query allows the user to select which populations they want to investigate. The summary statistics query allows the users to select which summary statistic they want to calculate. <br>The queries for the input format are explained in more details below.</p>
+              <p>Users will have to input and specify their email addresses and a query ID, so they are able to keep their data download and make it easier for them to identify their saved query. </p>
+              <p>Users will also be able to create an account in Pop.Genome by adding an email address and password so when users input queries they will receive a notification of when it is done, in the case of the query being too long.</p>
               <br>
               <h5><strong>General Query</strong></h5>
               <p>Users can specify one, or all, of either:</p>
@@ -80,7 +82,7 @@
               <br>
 
               <h5><strong>Genetic Diversity</strong></h5>
-              <p>Pop.Genome provides the user with the genetic diversity of the individual population that has been specified. Genetic diversity makes reference to the different attributes a species has inherited, by focusing on the variations there are on the alleles. To calculate the genetic diversity in a population, Pop.Genome uses the Watterson estimator. </p>
+              <p>Pop.Genome provides the user with the genetic diversity of the individual population that has been specified. Genetic diversity makes reference to the different attributes a species has inherited, by focusing on the variations there are on the alleles. To calculate the genetic diversity in a population, Pop.Genome uses the Watterson estimator/Nucleotide diversity(?). </p>
               <br>
 
               <h5><strong>Haplotype Diversity</strong></h5>
@@ -149,26 +151,60 @@
           <div class="row">
               <h3><u><strong>Output Format</strong></u></h3>
               <p>Pop.Genome presents the summary statistics results from what the user has specified in the queries in a table format. Some of the summary statistics (Tajima’s D, Fst Values, Genetic Diversity) are also presented as a sliding window.</p>
+              <p>Each of the 3 sliding windows mentioned above will have the option to select 2 populaitons to compare, in the case that the users specify for more than 2 populations in the first population query. </p>
+              <p>Pop.Genome also allows the users to specify how many base pairs (bp) the windows for the sliding window should be.</p>
               <p>If the users have queried for more than one SNP, the table will provide each individual SNP.</p>
-              <p>The table that will be provided for the users with the results from the summary statistics will contain the following columns:</p>
+              <p>A table will be presented with the Fst values produced from the comparison between each population the users have specified. </p>
+              <p>A table will be displayed with each of the 5 populations (AMR, EAS, SAS, EUR, and AFR) as rows, and will contain the values of each population of the following summary statistics as columns:</p>
+              <ul>
+                  <li>Nucleotide diversity as genetic diversity</li>
+                  <li>Tajima's D</li>
+                  <li>Haplotype diversity</li>
+              </ul>
               <br>
+              <p>Three tables will be presented showing the other summary statistics: Allele Frequency, Genotype Frequency, and Derived Allele Frequency. Each of these summary statistics are separated into tabs.</p>
+              <br>
+              <p>The table for Allele frequency will contain the following columns:</p>
               <ul>
                   <li><strong>CHROM =</strong> The chromosome number</li>
                   <li><strong>POS =</strong> The position of the SNP or of each SNP the users have queried</li>
                   <li><strong>REF =</strong> The reference alleles of the SNP or of each SNP the users have queried</li>
                   <li><strong>ALT =</strong> The alternate alleles of the SNP or of each SNP the users have queried</li>
                   <li><strong>GENE =</strong> The gene name the users want to query</li>
+                  <li><strong>RS_VAL =</strong> The rsID for the SNP</li>
                   <li><strong>AA =</strong> Ancestral allele</li>
                   <li><strong>AF_AFR =</strong> Allele frequency from African population.</li>
                   <li><strong>AF_AMR =</strong> Allele frequency from Mixed American population.</li>
                   <li><strong>AF_EAS =</strong> Allele frequency from East Asian population.</li>
                   <li><strong>AF_EUR =</strong> Allele frequency from European population.</li>
                   <li><strong>AF_SAS =</strong> Allele frequency from South Asian population.</li>
+              </ul>
+              <br>
+              <p>The table for Derived allele frequency will contain the following columns:</p>
+              <ul>
+                  <li><strong>CHROM =</strong> The chromosome number</li>
+                  <li><strong>POS =</strong> The position of the SNP or of each SNP the users have queried</li>
+                  <li><strong>REF =</strong> The reference alleles of the SNP or of each SNP the users have queried</li>
+                  <li><strong>ALT =</strong> The alternate alleles of the SNP or of each SNP the users have queried</li>
+                  <li><strong>GENE =</strong> The gene name the users want to query</li>
+                  <li><strong>RS_VAL =</strong> The rsID for the SNP</li>
+                  <li><strong>AA =</strong> Ancestral allele</li>
                   <li><strong>DAF_AFR =</strong> Derived allele frequency from African population.v</li>
                   <li><strong>DAF_AMR =</strong> Derived allele frequency from Mixed American population.</li>
                   <li><strong>DAF_EAS =</strong> Derived allele frequency from East Asian population.</li>
                   <li><strong>DAF_EUR =</strong> Derived allele frequency from European population.</li>
                   <li><strong>DAF_SAS =</strong> Derived allele frequency from South Asian population.</li>
+              </ul>
+              <br>
+              <p>The table for Genotype frequency will contain the following columns:</p>
+              <ul>
+                  <li><strong>CHROM =</strong> The chromosome number</li>
+                  <li><strong>POS =</strong> The position of the SNP or of each SNP the users have queried</li>
+                  <li><strong>REF =</strong> The reference alleles of the SNP or of each SNP the users have queried</li>
+                  <li><strong>ALT =</strong> The alternate alleles of the SNP or of each SNP the users have queried</li>
+                  <li><strong>GENE =</strong> The gene name the users want to query</li>
+                  <li><strong>RS_VAL =</strong> The rsID for the SNP</li>
+                  <li><strong>AA =</strong> Ancestral allele</li>
                   <li><strong>GF_HET_AFR =</strong> Genotype frequency of heterozygous African population.</li>
                   <li><strong>GF_HOM_REF_AFR =</strong> Genotype frequency of homozygous reference alleles on African population.</li>
                   <li><strong>GF_HOM_ALT_AFR =</strong> Genotype frequency of homozygous alternate alleles on African population.</li>
