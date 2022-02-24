@@ -274,7 +274,7 @@ def init_callbacks(dash_app):
         [Input("url", "pathname"),
          Input('window', 'value'),
          Input('pop_1', 'value'),
-         Input('pop_2', 'value')]
+         Input('pop_2', 'value')],
     )
     def update_seq_graph(url, w, p1, p2):
         uid = uid_from_url(url)
@@ -283,13 +283,22 @@ def init_callbacks(dash_app):
         if w and p1 and p2 is not None:
             seq_plot_df = plot_data_seqdiv(sp_df, ac_df, p1, p2, w)
 
-            fig = px.line(seq_plot_df, x="chrom_pos", y="seq_div",
-                          color="population", hover_name="population",
-                          labels=dict(chrom_pos="Chromosome Position (bp)",
-                                      seq_div="Nucleotide Diversity",
-                                      population="Population"
-                                      )
-                          )
+            try:
+                fig = px.line(seq_plot_df, x="chrom_pos", y="seq_div",
+                              color="population", hover_name="population",
+                              labels=dict(chrom_pos="Chromosome Position (bp)",
+                                          seq_div="Nucleotide Diversity",
+                                          population="Population"
+                                          )
+                              )
+            except ValueError:
+                fig = px.line(seq_plot_df, x="chrom_pos", y="seq_div",
+                              color="population", hover_name="population",
+                              labels=dict(chrom_pos="Chromosome Position (bp)",
+                                          seq_div="Nucleotide Diversity",
+                                          population="Population"
+                                          )
+                              )
 
             plotly_fmt(fig)
             return fig
@@ -311,13 +320,22 @@ def init_callbacks(dash_app):
             seq_plot_df = plot_data_tajimas(sp_df, ac_df, p1, p2, w)
             seq_plot_df.to_csv('seq_plot.csv', index=False, header=None)
 
-            fig = px.line(seq_plot_df, x="chrom_pos", y="tajima_d",
-                          color="population", hover_name="population",
-                          labels=dict(chrom_pos="Chromosome Position (bp)",
-                                      tajima_d="Tajima's D",
-                                      population="Population"
-                                      )
-                          )
+            try:
+                fig = px.line(seq_plot_df, x="chrom_pos", y="tajima_d",
+                              color="population", hover_name="population",
+                              labels=dict(chrom_pos="Chromosome Position (bp)",
+                                          tajima_d="Tajima's D",
+                                          population="Population"
+                                          )
+                              )
+            except ValueError:
+                fig = px.line(seq_plot_df, x="chrom_pos", y="tajima_d",
+                              color="population", hover_name="population",
+                              labels=dict(chrom_pos="Chromosome Position (bp)",
+                                          tajima_d="Tajima's D",
+                                          population="Population"
+                                          )
+                              )
 
             plotly_fmt(fig)
             return fig
@@ -340,13 +358,22 @@ def init_callbacks(dash_app):
             if w and p1 and p2 is not None:
                 fst_plot_df = plot_data_fst(sp_df, ac_df, p1, p2, w)
 
-                fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
-                              color="population", hover_name="population",
-                              labels=dict(chrom_pos="Chromosome Position",
-                                          fst="Fst",
-                                          population="Populations"
-                                          )
-                              )
+                try:
+                    fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
+                                  color="population", hover_name="population",
+                                  labels=dict(chrom_pos="Chromosome Position",
+                                              fst="Fst",
+                                              population="Populations"
+                                              )
+                                  )
+                except ValueError:
+                    fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
+                                  color="population", hover_name="population",
+                                  labels=dict(chrom_pos="Chromosome Position",
+                                              fst="Fst",
+                                              population="Populations"
+                                              )
+                                  )
 
                 plotly_fmt(fig)
                 return fig
