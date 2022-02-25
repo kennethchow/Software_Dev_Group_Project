@@ -47,7 +47,7 @@ def init_dashboard(server):
     """Create a Plotly Dash dashboard."""
     dash_app = dash.Dash(
         server=server,
-        routes_pathname_prefix="/dash/",
+        routes_pathname_prefix="/results/",
         external_stylesheets=[
             "/static/style.css",  # TODO: Figure out how to make style like rest of App
             "https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i",
@@ -95,20 +95,27 @@ def display_data(uid):
     list_of_lists = [[key for key, value in pop_dict.items() if value == x] for x in user_pops]
     user_cond_list = [item for sublist in list_of_lists for item in sublist]
 
-
     # Create the App layout
     main_table = dbc.Card(
         [
             dbc.CardBody(
                 [
-                    html.Br(),
-                    html.H5("Query Results", className="card-title",
-                            style={'font-weight': 'bold'}),
+                    html.Div(
+                        [
+                            html.Br(),
+                            html.H5("Query Results", className="card-title",
+                                    style={'font-weight': 'bold', 'display': 'inline-block'}),
+                            dcc.Link(html.Button("Submit Another Query", className="query",
+                                                 style={'display': 'inline-block'}),
+                                     href='/server', refresh=True,
+                                     ),
+
+                        ],
+                    )
                 ]
             ),
 
             dbc.CardHeader(
-
                 dbc.Tabs(
                     [
                         dbc.Tab(label="Allele Freq.", tab_id="allele_df"),
@@ -154,9 +161,10 @@ def display_data(uid):
     charts = dbc.Card(
         dbc.CardBody(
             [
-                html.H5("Charts", className="card-title", style={'font-weight': 'bold'}),
+                html.H5("Summary Statistics Charts", className="card-title", style={'font-weight': 'bold'}),
                 html.P(
-                    "Pick your default window size and two populations to compare."),
+                    "Please choose an window size for the statistics to be averaged across and a step function to \
+                     determine how far each window shifts (defaults set to 1000bp)."),
                 dbc.Col(
                     [html.Div([
                         html.Div(
@@ -169,7 +177,23 @@ def display_data(uid):
                             id='window',
                             type='number',
                             value=1000,
-                            min=1)
+                            min=1,
+                            className="form-control w-auto",
+                            style={"width": "50%", 'display': 'inline-block',
+                                   'verticalAlign': "left", 'margin-right': '4em'}),
+                        html.Div(
+                            [
+                                html.H6("""Step (bp)""",
+                                        style={'margin-right': '2em'})
+                            ],
+                        ),
+                        dcc.Input(
+                            id='step',
+                            type='number',
+                            value=1000,
+                            min=1,
+                            className="form-control w-auto",
+                            style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "right"})
                     ],
                         style={'display': 'flex'}, ),
                         html.Br(),
@@ -273,15 +297,16 @@ def init_callbacks(dash_app):
         Output('seq_d_graph', 'figure'),
         [Input("url", "pathname"),
          Input('window', 'value'),
+         Input('step', 'value'),
          Input('pop_1', 'value'),
          Input('pop_2', 'value')],
     )
-    def update_seq_graph(url, w, p1, p2):
+    def update_seq_graph(url, w, s, p1, p2):
         uid = uid_from_url(url)
         _, _, _, sp_df, ac_df = get_data(uid)
 
-        if w and p1 and p2 is not None:
-            seq_plot_df = plot_data_seqdiv(sp_df, ac_df, p1, p2, w)
+        if w and p1 is not None:
+            seq_plot_df = plot_data_seqdiv(sp_df, ac_df, p1, p2, w, s)
 
             try:
                 fig = px.line(seq_plot_df, x="chrom_pos", y="seq_div",
@@ -309,15 +334,16 @@ def init_callbacks(dash_app):
         Output('taj_d_graph', 'figure'),
         [Input("url", "pathname"),
          Input('window', 'value'),
+         Input('step', 'value'),
          Input('pop_1', 'value'),
          Input('pop_2', 'value')]
     )
-    def update_taj_graph(url, w, p1, p2):
+    def update_taj_graph(url, w, s, p1, p2):
         uid = uid_from_url(url)
         _, _, _, sp_df, ac_df = get_data(uid)
 
-        if w and p1 and p2 is not None:
-            taj_plot_df = plot_data_tajimas(sp_df, ac_df, p1, p2, w)
+        if w and p1 is not None:
+            taj_plot_df = plot_data_tajimas(sp_df, ac_df, p1, p2, w, s)
 
             try:
                 fig = px.line(taj_plot_df, x="chrom_pos", y="tajima_d",
@@ -345,21 +371,23 @@ def init_callbacks(dash_app):
         Output('fst_graph', 'figure'),
         [Input("url", "pathname"),
          Input('window', 'value'),
+         Input('step', 'value'),
          Input('pop_1', 'value'),
          Input('pop_2', 'value')]
     )
-    def update_fst_graph(url, w, p1, p2):
+    def update_fst_graph(url, w, s, p1, p2):
         uid = uid_from_url(url)
         _, fst_df, _, sp_df, ac_df = get_data(uid)
 
         # If user hasn't selected Fst then fst_df will be None:
         if fst_df is not None:
             if w and p1 and p2 is not None:
-                fst_plot_df = plot_data_fst(sp_df, ac_df, p1, p2, w)
+                fst_plot_df = plot_data_fst(sp_df, ac_df, p1, p2, w, s)
 
                 try:
                     fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
                                   color="population", hover_name="population",
+                                  color_discrete_sequence=["darkcyan"],
                                   labels=dict(chrom_pos="Chromosome Position",
                                               fst="Fst",
                                               population="Populations"
@@ -368,6 +396,7 @@ def init_callbacks(dash_app):
                 except ValueError:
                     fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
                                   color="population", hover_name="population",
+                                  color_discrete_sequence=["darkcyan"],
                                   labels=dict(chrom_pos="Chromosome Position",
                                               fst="Fst",
                                               population="Populations"
