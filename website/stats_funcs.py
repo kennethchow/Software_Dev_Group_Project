@@ -6,7 +6,7 @@ import itertools
 
 # ======= Dictionaries used to Create Tables of Data to Display ======= #
 
-pop_dict = {'AFR': 'African', 'AMR': 'Ad. Mixed American', 'EAS': 'East Asian',
+pop_dict = {'AFR': 'African', 'AMR': 'American', 'EAS': 'East Asian',
             'EUR': 'European', 'SAS': 'South Asian'}
 
 stats_dict = {'seq_div': 'Nucleotide Diversity', 'hap_div': 'Haplotype Diversity',

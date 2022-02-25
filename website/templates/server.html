@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Pop. Genome{% endblock %}
+{% block title %}1kGP SNP Browser{% endblock %}
 {% block content %}
 
 <!-- ======= Web Server Section ======= -->
 <section id="server" class="server section-bg">
     <div class="section-title">
-    <br> <br> <br>
-        <h2>Genomics Server</h2>
+    <br> <br> <br> <br>
+        <h2>1kGP SNP Browser</h2>
     </div>
     <div class="container">
         <div style="margin: 0 auto; max-width: 720px;">
@@ -115,20 +115,15 @@
                 </div>
 
                 <div class="text-center">
-                <br><p>Please enter an email and query identifier to be notified when query is complete.</p></div>
+                <br><p>Please enter a unique query identifier.</p></div>
 
-                <!-- Email Address   -->
-                <div class="mb-4 d-flex flex-row flex-wrap">
-                    <div class="col ms-4 py-2">
-                        <label class="form-label" for="email_add"><strong>Email Address</strong></label>
-                        <input class="form-control" type="text" id="email_add" name="email_add" size="30" placeholder="e.g. user@email.com">
-                    </div>
-
-                    <!-- Unique Identifier   -->
-                    <div class="col ms-4 py-2">
+                <!-- Unique Identifier   -->
+                <div class="mb-4 d-flex flex-row flex-wrap justify-content-center">
+                    <div class="px-4 py-2">
+                        <div class="text-center">
                         <label class="form-label" for="unique_id"><strong>Query Identifier</strong></label>
-                        <input class="form-control" type="text" id="unique_id" name="unique_id" size="30" placeholder="e.g. query_01_01_2022">
-                    </div>
+                        <input class="form-control w-auto" type="text" id="unique_id" name="unique_id" size="30" placeholder="e.g. query_01_01_2022">
+                    </div></div>
                 </div>
 
                 <div class="text-center">
@@ -147,7 +142,7 @@
         {% for query in query_ids %}
             <div class="container">
                 <div class="text-center">
-                    <a href="/dash/{{user_id}}/{{query}}">Query Unique ID: {{query}}</a>
+                    <a href="/results/{{user_id}}/{{query}}">Query Unique ID: {{query}}</a>
                 </div>
             </div>
         {% endfor %}
