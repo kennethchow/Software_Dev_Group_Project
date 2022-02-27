@@ -230,18 +230,21 @@ def display_data(uid):
                             style={'display': 'flex'}, ),
                     ]),
                 html.Br(),
-                dbc.Row(
-                    [
-                        dbc.Col(dcc.Graph(id='seq_d_graph'), style={"width": "30%", 'margin-right': '6em'}),
-                        dbc.Col(dcc.Graph(id='taj_d_graph'), style={"width": "30%"}),
-                    ]
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(dcc.Graph(id='watt_thet_graph'), style={"width": "30%", 'margin-right': '6em'}),
-                        dbc.Col(dcc.Graph(id='fst_graph'), style={"width": "30%"}),
-                    ]
-                ),
+                html.Div(id='graph_container',
+                     children = [
+                        dbc.Row(
+                            [
+                                dbc.Col(dcc.Graph(id='seq_d_graph'), style={"width": "30%", 'margin-right': '6em'}),
+                                dbc.Col(dcc.Graph(id='taj_d_graph'), style={"width": "30%"}),
+                            ]
+                        ),
+                        dbc.Row(
+                            [
+                                dbc.Col(dcc.Graph(id='watt_thet_graph'), style={"width": "30%", 'margin-right': '6em'}),
+                                dbc.Col(dcc.Graph(id='fst_graph'), style={"width": "30%"}),
+                            ]
+                        )]
+                         )
             ]
         )
         , color="white", outline=True
@@ -278,6 +281,15 @@ def init_callbacks(dash_app):
         uid = uid_from_url(url)
         # TODO: Return an error if there is no data with this uid.
         return display_data(uid)
+
+    @dash_app.callback(
+        Output("graph_container", "style"),
+        [Input('pop_1', 'value')],)
+    def hide_graphs(p1):
+        if p1 is not None:
+            return {'display': 'block'}
+        else:
+            return {'visibility': 'hidden'}
 
     @dash_app.callback(
         Output("tab-content", "children"),
