@@ -8,6 +8,7 @@ allel.chunked.storage_registry["default"] = allel.chunked.storage_zarr.ZarrTmpSt
 # Data Paths:
 zarr_path = 'website/data/FINAL_30x_GR38_NoBiIndel.zarr'
 pop_data_path = 'website/data/pop_data.panel'
+gene_alias_path = 'website/data/gene_aliases.json'
 
 
 def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
@@ -112,7 +113,24 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
         # Create a Boolean mask array:
         gene_mask = variants['GENE'][:] == gene_name
 
-        # If mask has >0 True values, then a match has been found:
+        # If mask has 0 True values, then no match has been found:
+        if np.count_nonzero(gene_mask) == 0:
+            # First check whether a gene alias has been used:
+            alias_dict = load_json(gene_alias_path)
+            # Search through dict to find if user's gene is a value and then return it's key if so:
+            gene_name = get_key(gene_name, alias_dict)
+            # If no alias found, then the gene isn't in the database and isn't an alias:
+            if gene_name == None:
+                variants = ""
+                pos = ""
+                genotypes = ""
+                phased_genotypes = ""
+                ph_pos = ""
+            else:
+                # Create a Boolean mask array using the correct gene name, rather than the alias:
+                gene_mask = variants['GENE'][:] == gene_name
+
+        # Separate if statement, in case gene_mask is generated after finding an alias:
         if np.count_nonzero(gene_mask) > 0:
             variants = variants.compress(gene_mask)
             pos = pos.compress(gene_mask)
@@ -140,12 +158,6 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
             phased_genotypes = subset_G_array(phased_genotypes, ph_gene_start, ph_gene_stop + 1, None, 'index')
             ph_pos = ph_pos[ph_gene_start:ph_gene_stop + 1]
 
-        else:
-            variants = ""
-            pos = ""
-            genotypes = ""
-            phased_genotypes = ""
-            ph_pos = ""
 
     # ---- SNP INFORMATION (Rs Value/(s)) ---- #
     # Check if user has entered rs value information:
@@ -193,6 +205,9 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
                                                                 pops, genotypes, phased_genotypes, variants)
 
     return stats_df, fst_df, ac_seg, seg_pos, variants
+
+
+
 
 
 
