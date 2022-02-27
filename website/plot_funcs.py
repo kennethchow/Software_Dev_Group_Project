@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def plot_data_seqdiv(seg_pos, ac_seg, pop1, pop2, w_size, step):
-    """Compute DataFrame of Nucleotide Diversity for two populations"""
+    """Compute DataFrame of Nucleotide Diversity for one/two populations"""
     windows = get_windows(seg_pos, w_size, step)
     # use the block centres as the X coordinate
     x = np.asarray(windows).mean(axis=1)
@@ -30,8 +30,35 @@ def plot_data_seqdiv(seg_pos, ac_seg, pop1, pop2, w_size, step):
     return df
 
 
+def plot_data_watt_thet(seg_pos, ac_seg, pop1, pop2, w_size, step):
+    """Compute DataFrame of Watterson's Theta for one/two populations"""
+    windows = get_windows(seg_pos, w_size, step)
+    # use the block centres as the X coordinate
+    x = np.asarray(windows).mean(axis=1)
+
+    # Watterson's Theta
+    y_1 = allel.windowed_watterson_theta(seg_pos, ac_seg[pop1][:], windows=windows)[0]
+    # Reduce data to only windows and values where SNPs are present:
+    x_1, y_1 = remove_nans(x, y_1)
+    # Create dictionary of x and y values:
+    d_pop1 = {'chrom_pos': x_1, 'watt_thet': y_1, 'population': pop1}
+
+    # If there is a second population selected, return a df containing both values:
+    if pop2 is not None:
+        y_2 = allel.windowed_watterson_theta(seg_pos, ac_seg[pop2][:], windows=windows)[0]
+        x_2, y_2 = remove_nans(x, y_2)
+        d_pop2 = {'chrom_pos': x_2, 'watt_thet': y_2, 'population': pop2}
+        df = pd.concat(
+            [pd.DataFrame(data=d_pop1), pd.DataFrame(data=d_pop2)] )
+
+    else:
+        df = pd.DataFrame(data=d_pop1)
+
+    return df
+
+
 def plot_data_tajimas(seg_pos, ac_seg, pop1, pop2, w_size, step):
-    """Compute DataFrame of Tajima's D for two populations"""
+    """Compute DataFrame of Tajima's D for one/two populations"""
     windows = get_windows(seg_pos, w_size, step)
     # use the block centres as the X coordinate
     x = np.asarray(windows).mean(axis=1)

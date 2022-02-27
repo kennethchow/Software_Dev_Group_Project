@@ -5,7 +5,7 @@ from dash import Output, Input
 import plotly.express as px
 import dash_bootstrap_components as dbc
 from dash import dash_table
-from .plot_funcs import plot_data_seqdiv, plot_data_tajimas, plot_data_fst
+from .plot_funcs import plot_data_seqdiv, plot_data_tajimas, plot_data_fst, plot_data_watt_thet
 import pandas as pd
 import allel
 import numpy as np
@@ -135,16 +135,23 @@ def display_data(uid):
         summary = dbc.Card(
             dbc.CardBody(
                 [
-                 html.H5("Summary Statistics", className="card-title",
-                         style={'font-weight': 'bold'}),
-                 dbc.Col(create_small_table(summary_stats, 'stats')),
-                 html.Br(),
-                 html.H5("Fst - Population Comparisons", className="card-title",
-                         style={'font-weight': 'bold'}),
-                 dbc.Col(create_small_table(summary_fst, "fst")),
+                    html.Div([
+                         html.H5("Summary Statistics", className="card-title",
+                                 style={'font-weight': 'bold'}),
+                         html.P(
+                            "Summary statistics have been calculated over the entire range of the query."),
+                         dbc.Col(create_small_table(summary_stats, 'stats')),
+                        ], style={'display': 'inline-block', 'margin-right': '8em', "width": "44%"}),
+                    html.Div([
+                         html.H5("Fst - Population Comparisons", className="card-title",
+                                 style={'font-weight': 'bold'}),
+                         html.P(
+                            "Fst values are shown for every possible population combination in the query."),
+                         dbc.Col(create_small_table(summary_fst, "fst")),
+                        ], style={'display': 'inline-block', "width": "44%"}),
                  ]
             ),
-            color="white", outline=True
+            color="white", outline=True,
         )
     else:
         summary = dbc.Card(
@@ -164,7 +171,7 @@ def display_data(uid):
                 html.H5("Summary Statistics Charts", className="card-title", style={'font-weight': 'bold'}),
                 html.P(
                     "Please choose an window size for the statistics to be averaged across and a step function to \
-                     determine how far each window shifts (defaults set to 1000bp)."),
+                     determine how far each window shifts (defaults set to 1,000bp and 100bp respectively)."),
                 dbc.Col(
                     [html.Div([
                         html.Div(
@@ -180,7 +187,7 @@ def display_data(uid):
                             min=1,
                             className="form-control w-auto",
                             style={"width": "50%", 'display': 'inline-block',
-                                   'verticalAlign': "left", 'margin-right': '4em'}),
+                                   'verticalAlign': "left", 'margin-right': '12em'}),
                         html.Div(
                             [
                                 html.H6("""Step (bp)""",
@@ -190,7 +197,7 @@ def display_data(uid):
                         dcc.Input(
                             id='step',
                             type='number',
-                            value=1000,
+                            value=100,
                             min=1,
                             className="form-control w-auto",
                             style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "right"})
@@ -221,9 +228,19 @@ def display_data(uid):
                         ],
                             style={'display': 'flex'}, ),
                     ]),
-                dbc.Col(dcc.Graph(id='seq_d_graph')),
-                dbc.Col(dcc.Graph(id='taj_d_graph')),
-                dbc.Col(dcc.Graph(id='fst_graph'))
+                html.Br(),
+                dbc.Row(
+                    [
+                        dbc.Col(dcc.Graph(id='seq_d_graph'), style={"width": "30%", 'margin-right': '6em'}),
+                        dbc.Col(dcc.Graph(id='taj_d_graph'), style={"width": "30%"}),
+                    ]
+                ),
+                dbc.Row(
+                    [
+                        dbc.Col(dcc.Graph(id='watt_thet_graph'), style={"width": "30%", 'margin-right': '6em'}),
+                        dbc.Col(dcc.Graph(id='fst_graph'), style={"width": "30%"}),
+                    ]
+                ),
             ]
         )
         , color="white", outline=True
@@ -235,9 +252,10 @@ def display_data(uid):
                 [main_table]
             ),
             dbc.Row(
-                [dbc.Col(summary, md=4),
-                 dbc.Col(charts, md=8),
-                 ]
+                [summary]
+            ),
+            dbc.Row(
+                [charts]
             )
         ]
     )
@@ -331,6 +349,43 @@ def init_callbacks(dash_app):
             return "Please select window size and populations to compare"
 
     @dash_app.callback(
+        Output('watt_thet_graph', 'figure'),
+        [Input("url", "pathname"),
+         Input('window', 'value'),
+         Input('step', 'value'),
+         Input('pop_1', 'value'),
+         Input('pop_2', 'value')],
+    )
+    def update_wt_graph(url, w, s, p1, p2):
+        uid = uid_from_url(url)
+        _, _, _, sp_df, ac_df = get_data(uid)
+
+        if w and p1 is not None:
+            seq_plot_df = plot_data_watt_thet(sp_df, ac_df, p1, p2, w, s)
+
+            try:
+                fig = px.line(seq_plot_df, x="chrom_pos", y="watt_thet",
+                              color="population", hover_name="population",
+                              labels=dict(chrom_pos="Chromosome Position (bp)",
+                                          watt_thet="Watterson's Theta",
+                                          population="Population"
+                                          )
+                              )
+            except ValueError:
+                fig = px.line(seq_plot_df, x="chrom_pos", y="watt_thet",
+                              color="population", hover_name="population",
+                              labels=dict(chrom_pos="Chromosome Position (bp)",
+                                          watt_thet="Watterson's Theta",
+                                          population="Population"
+                                          )
+                              )
+
+            plotly_fmt(fig)
+            return fig
+        else:
+            return "Please select window size and populations to compare"
+
+    @dash_app.callback(
         Output('taj_d_graph', 'figure'),
         [Input("url", "pathname"),
          Input('window', 'value'),
@@ -388,7 +443,7 @@ def init_callbacks(dash_app):
                     fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
                                   color="population", hover_name="population",
                                   color_discrete_sequence=["darkcyan"],
-                                  labels=dict(chrom_pos="Chromosome Position",
+                                  labels=dict(chrom_pos="Chromosome Position (bp)",
                                               fst="Fst",
                                               population="Populations"
                                               )
@@ -397,7 +452,7 @@ def init_callbacks(dash_app):
                     fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
                                   color="population", hover_name="population",
                                   color_discrete_sequence=["darkcyan"],
-                                  labels=dict(chrom_pos="Chromosome Position",
+                                  labels=dict(chrom_pos="Chromosome Position (bp)",
                                               fst="Fst",
                                               population="Populations"
                                               )
@@ -439,11 +494,11 @@ def plotly_fmt(fig):
                 color='rgb(82, 82, 82)',
             ),
         ),
-        width=700,
+        width=650,
         height=300,
         margin=dict(
             autoexpand=True,
-            l=80,
+            l=20,
             r=20,
             t=20, ),
         transition_duration=500,
