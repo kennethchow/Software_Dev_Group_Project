@@ -1,6 +1,0 @@
-{
-    "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
-    "ID": "AC",
-    "Number": "A",
-    "Type": "Integer"
-}

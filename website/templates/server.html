@@ -1,57 +1,137 @@
 {% extends "base.html" %}
-{% block title %}Pop. Genome{% endblock %}
+{% block title %}1kGP SNP Browser{% endblock %}
 {% block content %}
 
 <!-- ======= Web Server Section ======= -->
 <section id="server" class="server section-bg">
     <div class="section-title">
-    <br> <br> <br>
-        <h2>Genomics Server</h2>
+    <br> <br> <br> <br>
+        <h2>1kGP SNP Browser</h2>
     </div>
     <div class="container">
-        <div style="margin-left: 20em;">
-            <p>Please specify a query from the options listed below. </p>
+        <div style="margin: 0 auto; max-width: 720px;">
             <form method="POST" action="" enctype="multipart/form-data">
-              <!-- Grouping Data in a field set -->
-              <fieldset>
+            <div class="text-center"><p>Please specify a query from the options listed below.</p></div>
 
-              <!-- Genomic Coordinate - Chromosome start/end   -->
-              <p><label for="chromosomes"><b>Chromosome:</b></label>&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
-              <select id="chromosomes" name="chr">
-                  <option value="" selected>--</option>
-                  <!-- Add options here equal to chromosomes uploaded   -->
-                  <option value="22">22</option>
-                  <option value="X">X</option>
-                  <option value="Y">Y</option>
+                <!-- Genomic Coordinate - Chromosome start/end   -->
+                <div class="mb-3 d-flex flex-row flex-wrap">
 
-              </select>
-              <label for="chrstart">&nbsp;&nbsp;&nbsp;&nbsp;Start Position:</label>&nbsp;&nbsp;
-              <input type="text" id="chrstart" name="chrstart" size="5">
-              <label for="chrend">&nbsp;&nbsp;&nbsp;&nbsp;End Position:</label>&nbsp;&nbsp;
-              <input type="text" id="chrend" name="chrend" size="5">
-              </p>
+                    <div class="col px-4 py-2">
+                        <label class="form-label" for="chromosomes"><strong>Chromosome</strong></label>
+                        <select class="form-select w-auto" id="chromosomes" name="chr">
+                            <!-- Add options here equal to chromosomes uploaded
+                            <option value="" selected>--</option> Uncomment this line with >1 chromosome-->
+                            <option value="22" selected>22</option>
 
-              <!-- SNP name (rs value)   -->
-              <p><label for="snpname"><b>SNP Name (rs value):</b></label>&nbsp;&nbsp;&nbsp;&nbsp;
-              <input type="text" id="snpname" name="snpname" size="20"></p>
+                        </select>
+                    </div>
 
-              <!-- Gene name (+ any associated aliases)   -->
-              <p><label for="genename"><b>Gene Name:</b></label>&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-              <input type="text" id="genename" name="genename" size="20"></p>
+                    <div class="col px-4 py-2">
+                        <label class="form-label" for="chrstart"><strong>Start Position</strong></label>
+                        <input class="form-control w-auto" type="text" id="chrstart" name="chrstart" size="12" placeholder="e.g. 10510061">
+                    </div>
 
-            <br><p>Please enter an email and query identifier to be notified when query is complete. </p>
+                    <div class="col px-4 py-2">
+                        <label class="form-label" for="chrend"><strong>End Position</strong></label>
+                        <input class="form-control w-auto" type="text" id="chrend" name="chrend" size="12" placeholder="e.g. 50808378">
+                    </div>
 
-              <!-- Email Address   -->
-              <p><label for="email_add"><b>Email Address:</b></label>&emsp;&emsp;&emsp;&emsp;
-              <input type="text" id="email_add" name="email_add" size="30"></p>
+                </div>
 
-              <!-- Unique Identifier   -->
-              <p><label for="unique_id"><b>Query Identifier:</b></label>&emsp;&emsp;&emsp;
-              <input type="text" id="unique_id" name="unique_id" size="30"></p>
+                <div class="mb-3 d-flex flex-row flex-wrap">
+                    <div class="col px-4 py-2">
+                        <!-- SNP name (rs value)   -->
+                        <label class="form-label" for="snpname"><strong>SNP Name</strong></label>
+                        <input class="form-control w-auto" type="text" id="snpname" name="snpname" size="20" placeholder="e.g. rs891782249">
+                    </div>
 
-            <br><div style="margin-left: 12.2em;">
-            <button type="submit" class="btn btn-primary">Submit</button></div>
-            </fieldset>
+                    <div class="col px-4 py-2">
+                        <!-- Gene name (+ any associated aliases)   -->
+                        <label class="form-label" for="genename"><strong>Gene Name</strong></label>
+                        <input class="form-control w-auto" type="text" id="genename" name="genename" size="20" placeholder="e.g. BCRP3">
+                    </div>
+                </div><br>
+
+                <!-- Select Summary Stats   -->
+                <div class="mb-3">
+                    <strong>Summary Statistics</strong>
+                    <div class="form-check ms-4 py-2">
+                        <input class="form-check-input" type="checkbox" id="all_stats" onclick="toggle_checks(this, '#stat_checks');" checked/>
+                        <label class="form-check-label" for="all_stats">Select all</label>
+                    </div>
+                    <div class="d-flex flex-row flex-wrap" id="stat_checks">
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="seq_div" id="seq_div" checked/>
+                            <label class="form-check-label" for="seq_div">Nucleotide diversity</label>
+                        </div>
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="watt_thet" id="watt_thet" checked/>
+                            <label class="form-check-label" for="watt_thet">Watterson's Theta</label>
+                        </div>
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="taj_d" id="taj_d" checked/>
+                            <label class="form-check-label" for="taj_d">Tajima's D</label>
+                        </div>
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="hap_div" id="hap_div" checked/>
+                            <label class="form-check-label" for="hap_div">Haplotype diversity</label>
+                        </div>
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="fst" id="fst" checked/>
+                            <label class="form-check-label" for="fst">Fst</label>
+                        </div>
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="daf" id="daf" checked/>
+                            <label class="form-check-label" for="daf">Derived allele freq.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Select Populations   -->
+                <div class="mb-3">
+                    <strong>Populations of Interest</strong>
+                    <div class="form-check ms-4 py-2">
+                        <input class="form-check-input" type="checkbox" id="all_pops" onclick="toggle_checks(this, '#pop_checks');" checked/>
+                        <label class="form-check-label" for="all_pops">Select all</label>
+                    </div>
+                    <div class="d-flex flex-row flex-wrap" id="pop_checks">
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="AFR" id="AFR" checked/>
+                            <label class="form-check-label" for="AFR">African</label>
+                        </div>
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="AMR" id="AMR" checked/>
+                            <label class="form-check-label" for="AMR">American</label>
+                        </div>
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="EAS" id="EAS" checked/>
+                            <label class="form-check-label" for="EAS">East Asian</label>
+                        </div>
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="EUR" id="EUR" checked/>
+                            <label class="form-check-label" for="EUR">European</label>
+                        </div>
+                        <div class="form-check ms-4 py-2 col-5 col-sm-5 col-md-3">
+                            <input class="form-check-input" type="checkbox" name="SAS" id="SAS" checked/>
+                            <label class="form-check-label" for="SAS">South Asian</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                <br><p>Please enter a unique query identifier.</p></div>
+
+                <!-- Unique Identifier   -->
+                <div class="mb-4 d-flex flex-row flex-wrap justify-content-center">
+                    <div class="px-4 py-2">
+                        <div class="text-center">
+                        <label class="form-label" for="unique_id"><strong>Query Identifier</strong></label>
+                        <input class="form-control w-auto" type="text" id="unique_id" name="unique_id" size="30" placeholder="e.g. query_01_01_2022">
+                    </div></div>
+                </div>
+
+                <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button></div>
             </form>
         </div>
     </div>
@@ -60,13 +140,13 @@
     {% if session['logged_in'] == True %}
       <div class="section-title">
           <br> <br> <br>
-        <h2>Prior Results</h2>
+        <h2>Prior Queries</h2>
       </div>
         <ul>
-        {% for file in files %}
+        {% for query in query_ids %}
             <div class="container">
                 <div class="text-center">
-                    <a href="{{ url_for('web_server.uploads', filename=file) }}">{{file}}</a>
+                    <a href="/results/{{user_id}}/{{query}}">Query Unique ID: {{query}}</a>
                 </div>
             </div>
         {% endfor %}
@@ -75,14 +155,26 @@
     {% else %}
         <div class="container">
              <br>
-            <div style="margin-left: 26em;">
+            <div class="text-center">
                 <p>Please register/ login to store results. </p>
             </div>
         </div>
 
     {% endif %}
 
+
 </section><!-- End Server Section -->
+
+<!-- Controlling check-box select-all boxes -->
+<script>
+
+function toggle_checks(source, id) {
+    for (check of document.querySelectorAll(id+" input[type='checkbox']")) {
+        check.checked = source.checked;
+    }
+}
+
+</script>
 
 
 {% endblock %}

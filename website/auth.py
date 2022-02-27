@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, session, flash, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
-from website.models import User, Note
+from website.models import User
 from . import db
 
 
@@ -14,27 +14,18 @@ auth = Blueprint('auth', __name__)
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
-        print(email)
         password = request.form.get('password')
-        print("Password: ", password)
         user = User.query.filter_by(email=email).first()
-        print("User", user)
 
         if user:
-            print("User line running.")
-            pass_check = check_password_hash(user.password, password)
-            print("Pword check: ", pass_check)
             if check_password_hash(user.password, password):
-                print("Logged in.")
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
                 session['logged_in'] = True
                 session['user_email'] = user.email
-                print("Session email: ", session['user_email'])
                 return redirect(url_for('basic_pgs.home'))
             else:
                 flash('Incorrect password, try again.', category='error')
-                print("Nothing happened.")
         else:
             flash('Email does not exist.', category='error')
 
@@ -46,7 +37,6 @@ def login():
 def logout():
     session.pop('logged_in', None)
     session.pop('user_email', None)
-    print("Tried to log out")
     flash('Logged out successfully!', category='success')
     logout_user()
     return redirect(url_for('auth.login'))

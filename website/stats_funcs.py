@@ -1,189 +1,213 @@
-#### GENETIC DIVERSITY ####
-def GeneticDiversity(seg_pos, ac_seg, pop1, start, stop):
-    # Calculating the sequence diversity
-    pi = allel.sequence_diversity(seg_pos, ac_seg[pop1][:], start, stop)
-
-    return pi
+import allel
+import numpy as np
+import pandas as pd
+import itertools
 
 
-def plot_GenDiv(seg_pos, ac_seg, pop1, plot_name='GenDiv_graph'):
-    if len(seg_pos) >= 2001:
-        wind_size = 2000
-    elif len(seg_pos) >= 101:
-        wind_size = 100
-    elif len(seg_pos) >= 11:
-        wind_size = 10
-    else:
-        wind_size = 1
+# ======= Dictionaries used to Create Tables of Data to Display ======= #
 
-    windows = allel.moving_statistic(seg_pos, statistic=lambda v: [v[0], v[-1]], size=wind_size)
+pop_dict = {'AFR': 'African', 'AMR': 'American', 'EAS': 'East Asian',
+            'EUR': 'European', 'SAS': 'South Asian'}
 
-    # Compute Genetic Diversity
-    y = allel.windowed_diversity(seg_pos, ac_seg[pop1][:], windows=windows)[0]
-
-    # use the block centres as the X coordinate
-    x = windows
-
-    # plot
-    fig, ax = plt.subplots(figsize=(12, 4))
-    sns.despine(ax=ax, offset=10)
-    ax.plot(x, y, 'k-', lw=.5)
-    plt.title('Slidng window showing the Genetic Diversity through chromosome 22')
-    ax.set_ylabel('Genetic Diversity')
-    ax.set_xlabel('Chromosome %s position (bp)' % chrom)
-    ax.set_xlim(seg_pos.min(), seg_pos.max())
-    plt.savefig(f'{plot_name}.png')
-
-    return fig
+stats_dict = {'seq_div': 'Nucleotide Diversity', 'watt_thet': 'Watterson\'s Theta', 'hap_div': 'Haplotype Diversity',
+              'taj_d': 'Tajima\'s D', 'fst': 'Fst', 'daf': 'Derived Allele Frequency'}
 
 
+# ======= Functions used to process the Chromosome VCF Data and create the summary stats ======= #
 
-#### TAJIMAS D ####
-def plot_tajimas(seg_pos, ac_seg, pop1, pop2, plot_name='tajimasd_graph'):
-    if len(seg_pos) >= 2001:
-        wind_size = 2000
-    elif len(seg_pos) >= 100:
-        wind_size = 100
-    elif len(seg_pos) >= 10:
-        wind_size = 10
-    else:
-        wind_size = 1
+def subset_G_array(data, start_idx, stop_idx, mask, subset_type):
+    """ Function to retain chunked compression during subsetting """
 
-    windows = allel.moving_statistic(pos, statistic=lambda v: [v[0], v[-1]], size=wind_size)
-    x = np.asarray(windows).mean(axis=1)
+    # To subset by index:
+    if subset_type == 'index':
+        data = allel.chunked.core.subset(data, range(start_idx, stop_idx))
+    # To subset according to a mask:
+    elif subset_type == 'mask':
+        data = allel.chunked.core.compress(mask, data)
 
-    # compute Tajima's D
-    y1, _, _ = allel.windowed_tajima_d(seg_pos, ac_seg[pop1][:], windows=windows)
-    y2, _, _ = allel.windowed_tajima_d(seg_pos, ac_seg[pop2][:], windows=windows)
+    # Convert back to a chunked Genotype array:
+    data = allel.GenotypeChunkedArray(data)
 
-    # plot
-    fig, ax = plt.subplots(figsize=(12, 4))
-    sns.despine(ax=ax, offset=10)
-    ax.plot(x, y1, lw=.5, label='AFR')
-    ax.plot(x, y2, lw=.5, label='EUR')
-    plt.title("Plot of Tajima's $D$ in Window over Chromosome %s" % chrom)
-    ax.set_ylabel("Tajima's $D$")
-    ax.set_xlabel('Chromosome %s position (bp)' % chrom)
-    ax.set_xlim(seg_pos.min(), seg_pos.max())
-    ax.legend(loc='upper left', bbox_to_anchor=(1, 1));
-    plt.savefig(f'{plot_name}.png')
-
-    return fig
+    return data
 
 
+def create_index_mask(data, start_idx, stop_idx):
+    """ Creates a Boolean mask from start and stop indices """
 
-#### FST VALUES AND PLOT ####
-def plot_fst(ac1, ac2, pos, plot_name='fst_graph', blen=2000):
-    fst, fst_se, vb, _ = allel.blockwise_hudson_fst(ac1, ac2, blen=blen)
+    sel = np.asanyarray(range(start_idx, stop_idx))
+    mask = np.zeros(len(data), dtype=bool)
 
-    # use the per-block average Fst as the Y coordinate
-    y = vb
+    # Setting the values between the indices equal to True if >1 SNP in range of query:
+    if len(sel) > 0:
+        mask[sel] = True
 
-    # use the block centres as the X coordinate
-    x = allel.moving_statistic(pos, statistic=lambda v: (v[0] + v[-1]) / 2, size=blen)
-
-    # plot
-    fig, ax = plt.subplots(figsize=(12, 4))
-    sns.despine(ax=ax, offset=10)
-    ax.plot(x, y, 'k-', lw=.5)
-    plt.title("Plot of Fst in Window over Chromosome %s\n For Populations AFR and EUR" % chrom)
-    ax.set_ylabel('$F_{ST}$')
-    ax.set_xlabel('Chromosome %s position (bp)' % chrom)
-    ax.set_xlim(0, pos.max())
-    plt.savefig(f'{plot_name}.png')
-    # F string, aka function string. Can add any number or list
-
-    return fig
+    return mask
 
 
+def haplotype_diversity(genotype_chunked_array):
+    """ Calculting haplotype diversity from a genotype chunked array """
 
-#### MASSIVE USER INPUT FUNCTION ####
-def UserInput(query_id, start, stop, pop1, pop2, chrom='22', m_allele=3):
-    # Still need to add gene name, rsID
+    # converting genotype chunked array to genotype array
+    genotype_array = genotype_chunked_array[:]
 
-    # hardcoded the zarr path
-    zarr_path = 'Documents/GitHub/Software_Dev_Group_Project/website/data/ALL_30X_Chr22_GR38.zarr'
+    # computing haplotype array from genotype array
+    haplotype_array = genotype_array.to_haplotypes()
 
-    ### GENOTYPE DATA ###
-    # Opening the zarr file
-    callset = zarr.open_group(zarr_path, mode='r')
+    # computing haplotype diversity
+    hap_div = allel.haplotype_diversity(haplotype_array)
 
-    # Creating variants table
-    variants = allel.VariantChunkedTable(callset[chrom]['variants'],
-                                         names=['POS', 'REF', 'ALT', 'GENE', 'RS_VAL', ],
-                                         index='POS')
+    return hap_div
 
-    # Extract variant positions and store in array:
-    pos = variants['POS'][:]
 
-    print('Positions extracted.')
+def SummaryStats(stats, seg_pos, ac_seg, pop, pop_data, phased_genotypes):
+    """ Calculate Summary Stats """
+    comb_stats = []
 
-    ## POPULATION DATA ###
-    # need to hardcode the population data
-    pop_path = 'Documents/integrated_call_samples_v3.20130502.ALL.panel'
-    pop_data = pd.read_csv(pop_path, sep='\t')
+    if 'seq_div' in stats:
+        seq_div = allel.sequence_diversity(seg_pos, ac_seg[pop][:])
+        comb_stats.append(seq_div)
 
-    # Drop any Unnamed columns from population data:
-    pop_data = pop_data.loc[:, ~pop_data.columns.str.contains('^Unnamed')]
+    if 'watt_thet' in stats:
+        watt_thet = allel.watterson_theta(seg_pos, ac_seg[pop][:])
+        comb_stats.append(watt_thet)
 
-    print('Population data processed')
+    if 'taj_d' in stats:
+        taj_d = allel.tajima_d(ac_seg[pop][:], pos=seg_pos)
+        comb_stats.append(taj_d)
+
+    if 'hap_div' in stats:
+        # If there is no matching phased genotype then hap diversity cannot be calculated:
+        if not isinstance(phased_genotypes, str):
+            # Create Boolean array classifying population membership:
+            sample_selection = pop_data.super_pop.isin({pop}).values
+
+            # Subset the phased haplotype data based on population membership:
+            ph_gen_subset = allel.GenotypeChunkedArray(allel.chunked.core.subset(
+                phased_genotypes, sel0=None, sel1=sample_selection))
+
+            # Calculate haplotype diversity from that subset:
+            hap_div = haplotype_diversity(ph_gen_subset)
+            comb_stats.append(hap_div)
+
+        else:
+            comb_stats.append('**')
+
+    return comb_stats
+
+
+def create_data_table(pops, stats, stats_data):
+    """ Function to calculate the output table to display the summary stats """
+
+    full_pop_names = []
+    full_stats_names = []
+
+    # Append which pops and stats have been selected by the user:
+    for key in pops:
+        full_pop_names.append(pop_dict[key])
+
+    for st in stats:
+        full_stats_names.append(stats_dict[st])
+
+    # Removing fst and daf as they are not calculated here:
+    try:
+        full_stats_names.remove('Fst')
+        full_stats_names.remove('Derived Allele Frequency')
+    except:
+        pass
+
+    # Create a pandas dataframe using the summary stats:
+    stats_df = pd.DataFrame(stats_data, columns=full_stats_names)
+    stats_df.insert(loc=0, column='Population', value=full_pop_names)
+    stats_df = stats_df.fillna('*')
+    stats_df = stats_df.round(4)
+
+    return stats_df
+
+
+def PopulationFiltering(pop_data, stats, pops, genotypes, phased_genotypes, variants):
+    """ Subsetting the data based on population membership """
 
     # Create Boolean array classifying population membership:
-    sample_selection = pop_data.super_pop.isin({pop1, pop2}).values
+    sample_selection = pop_data.super_pop.isin(pops).values
 
     # Create a subset of the pop_data table based on this selection:
     samples_subset = pop_data[sample_selection].reset_index(drop=True)
 
-    # Subsetting genotypes
-    calldata = callset[chrom]['calldata']
-    genotypes = allel.GenotypeChunkedArray(calldata['GT'])
-    genotypes_subset = genotypes.subset(sel0=None, sel1=sample_selection)
+    # Subsetting genotypes based on the selection mask (i.e. which populations to keep):
+    # sel0 indicates variants (i.e. rows) to drop, sel1 indicates samples (i.e. columns) to drop:
+    genotypes = allel.GenotypeChunkedArray(allel.chunked.core.subset(
+        genotypes, sel0=None, sel1=sample_selection))
 
-    # Allele count within the two populations listed, creating a dictionary:
-    subpops = {
-        'ALL': list(range(len(samples_subset))),
-        pop1: samples_subset[samples_subset.super_pop == pop1].index.tolist(),
-        pop2: samples_subset[samples_subset.super_pop == pop2].index.tolist(),
-    }
+    """ Calculate allele count data for these populations"""
 
-    # Counting the alleles within the sub-populations:
-    ac_subpops = genotypes_subset.count_alleles_subpops(subpops, max_allele=3)
+    # Create a dictionary to hold information about whether each sample is in a population:
+    subpops = {'ALL': list(range(len(samples_subset)))}
 
-    print("Allele count done")
+    # Add new key and value for each population:
+    for p in range(len(pops)):
+        subpops[pops[p]] = samples_subset[samples_subset.super_pop == pops[p]].index.tolist()
 
-    # Boolean array of those SNPs that do segregate:
+    # Counting the alleles within the sub-populations (max alternate allele set to 5):
+    ac_subpops = genotypes.count_alleles_subpops(subpops, max_allele=5)
+
+    """ Subsetting Data Based on Whether the SNPs Segregate """
+
+    # Boolean array of those SNPs that do segregate among the populations selected:
     is_seg = ac_subpops['ALL'].is_segregating()[:]
 
-    # Subset the two population genotypes subset to keep only the segregating SNPs:
-    genotypes_seg = genotypes_subset.compress(is_seg, axis=0)
+    #print("Is Seg Contents: ", is_seg)
+    # If there are no segregating variants, then cannot calculate summary stats.
+    if not any(is_seg):
+        pop_stats = 'No segregating variants at this SNP.'
 
-    # Subset the allele counts as well:
-    ac_seg = ac_subpops.compress(is_seg)
+    else:
+        # Subset the population data to keep only the segregating SNPs:
+        ac_seg = ac_subpops.compress(is_seg)
+        variants_seg = variants.compress(is_seg)
+        seg_pos = variants_seg['POS'][:]
 
-    # And the variants data:
-    variants_seg = variants.compress(is_seg)
+        """ Calculating Summary Stats """
+        pop_stats = []
 
-    # Extract variant positions and store in array:
-    seg_pos = variants_seg['POS'][:]
+        for pop in pops:
+            comb_stats = SummaryStats(stats, seg_pos, ac_seg, pop, pop_data, phased_genotypes)
+            pop_stats.append(comb_stats)
 
-    # Calling the Genetic Diversity function:
-    pop1_pi = GeneticDiversity(seg_pos, ac_seg, pop1, start, stop)
-    pop2_pi = GeneticDiversity(seg_pos, ac_seg, pop2, start, stop)
-    # Genetic Diversity for sliding window:
-    GenDiv_plot = plot_GenDiv(seg_pos, ac_seg, pop1, plot_name='GenDiv_graph' + query_id)
+    # A string message is returned in the case there are no segregating variants:
+    if isinstance(pop_stats, str):
+        stats_df = pop_stats
+        fst_df = ""
+        ac_seg = ""
+        seg_pos = ""
 
-    # Calculating fst:
-    fst, fst_se, _, _ = allel.blockwise_hudson_fst(ac_seg[pop1], ac_seg[pop2], blen=100000)
-    # Fst sliding window:
-    fst_plot = plot_fst(ac_seg[pop1], ac_seg[pop2], variants_seg['POS'][:], plot_name='fst_graph' + query_id)
+    else:
+        stats_df = create_data_table(pops, stats, pop_stats)
 
-    # Calculating Tajima's D:
-    # taj_pop1 = allel.windowed_tajima_d(seg_pos, ac_seg[pop1][:], windows=windows)
-    # taj_pop2 = allel.windowed_tajima_d(seg_pos, ac_seg[pop2][:], windows=windows)
-    # Tajimas slidng window:
-    tajimas_plot = plot_tajimas(seg_pos, ac_seg, pop1, pop2, plot_name='tajimasd_graph' + query_id)
+        """ Calc. Fst for Combinations of Populations """
+        # Create a list of all the possible population combinations from those selected by the user:
+        pop_combs = list(itertools.combinations(pops, 2))
 
-    return fst, fst_se, fst_plot, pop1_pi, pop2_pi, tajimas_plot
+        if 'fst' in stats:
+            # Working out fst for each pair of populations:
+            fst_comps = []
+            fst_col_vals = []
+            for c in range(len(pop_combs)):
+                num, den = allel.hudson_fst(ac_seg[pop_combs[c][0]],
+                                            ac_seg[pop_combs[c][1]])
+                try:
+                    fst = np.sum(num) / np.sum(den)
+                except:
+                    fst = 0
+                fst_comps.append(fst)
+                fst_col_vals.append("%s vs. %s" % (pop_dict[pop_combs[c][0]], pop_dict[pop_combs[c][1]]))
 
-    # return haplotype
+            # Create a pandas dataframe using the fst stats:
+            fst_df = pd.DataFrame({'Populations Compared': fst_col_vals,
+                                   'Fst Value': fst_comps},
+                                  columns=['Populations Compared', 'Fst Value'])
+            fst_df = fst_df.fillna('***')
 
+        else:
+            fst_df = ""
+
+    return stats_df, fst_df, ac_seg, seg_pos
