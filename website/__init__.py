@@ -21,8 +21,6 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Conditions for file uploads:
-    app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
-    app.config['UPLOAD_EXTENSIONS'] = ['.fa', '.fasta', '.fas']
     app.config['UPLOAD_PATH'] = 'website/uploads/'
 
     db.init_app(app)
