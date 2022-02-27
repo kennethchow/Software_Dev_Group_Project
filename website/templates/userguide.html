@@ -4,10 +4,6 @@
 
 <!-- ======= User Guide Section ======= -->
     <section id="User Guide" class="User Guide">
-    <div class="section-title">
-        <br><br><br><br>
-        <h2>User guide</h2>
-    </div>
 
       <div class="container">
 
@@ -16,7 +12,7 @@
           <div class = "row">
               <h3><u><strong>Data Source</strong></u></h3>
               <p>1kGP SNP Browser supports the latest human genome assembly: the 1000 Genomes 30x on GRCh38, focusing on chromosome 22. More information on this dataset can be found by <a href="https://www.internationalgenome.org/data-portal/data-collection/30x-grch38">clicking here.</a></p>
-              <p>This dataset excludes the 698 related samples in the 30x dataset. Therefore, 1kGP SNP Browser focuses on unrelated samples. Reasoning for this is because related samples have similar genetics and would affect the summary statistical results, such as genetic diversity, haplotype diversity. 1kGP SNP Browser only focuses on SNPs, therefore, the dataset excludes the indels, to also reduce the variation which can have an impact on the SNPs. 1kGP SNP Browser also focuses on biallelic sites, since human SNPs are more common to be biallelic than multi-allelic, and would obtain concordant results for the summary statistics. </p>
+              <p>This dataset excludes the 698 related samples in the 30x dataset. Therefore, 1kGP SNP Browser focuses on unrelated samples. Reasoning for this is because related samples have the same genetics and would give unclear summary statistical results. 1kGP SNP Browser only focuses on SNPs, therefore, the dataset used contains non-indels and excludes the indels, to also reduce the variation which can have an impact on the SNPs. 1kGP SNP Browser also focuses on biallelic sites, since human SNPs are more common to be biallelic than multi-allelic, and would obtain concordant results for the summary statistics. </p>
               <p>1kGP SNP Browser contains a genotypes dataset, more information on the dataset can be found through this link: <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/">Genotypes Data.</a> 1kGP SNP Browser also has a phased genotypes dataset which is used to calculate haplotype diversity, more information on this dataset can be found through this link: <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_phased/">Phased Genotypes Data.</a></p>
               <br><br><br>
 
@@ -95,7 +91,7 @@
               <br>
 
               <h5><strong>Derived Allele Frequency</strong></h5>
-              <p>1kGP SNP Browser provides the user with another statistical test for neutrality (Derived Allele Frequency). A derived allele refers to a mutated allele, that is an allele that is not identical to a given ancestral allele at a specific genomic position. It follows that Derived Allele Frequency (DAF) is the proportion of alleles within a given population that are not the ancestral allele. Therefore, DAF is a measure of genetic drift. A value of 0 signifies that the population contains only the ancestral allele and a 1 means the converse: the population contains only derived alleles. </p>
+              <p>1kGP SNP Browser provides the user with another statistical test for neutrality (Derived Allele Frequency). Derived Allele Frequency (DAF) refers to the frequency that a mutated allele is present in a population. </p>
               <br>
           </div>
 
