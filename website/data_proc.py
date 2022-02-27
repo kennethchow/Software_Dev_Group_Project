@@ -76,7 +76,7 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
         except:
             stop_idx = 0
 
-        # Similarly for the phased data:
+        # Similarly, for the phased data:
         ph_start_array = (ph_pos - int(start_pos))
         try:
             ph_start_idx = list(ph_start_array).index(min(ph_start_array[ph_start_array >= 0]))
@@ -90,11 +90,20 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
 
         # Reducing Data According to Positions specified:
         pos_mask = create_index_mask(variants, start_idx, stop_idx + 1)
-        variants = variants.compress(pos_mask)
-        pos = pos[start_idx:stop_idx + 1]
-        genotypes = subset_G_array(genotypes, start_idx, stop_idx + 1, None, 'index')
-        phased_genotypes = subset_G_array(phased_genotypes, ph_start_idx, ph_stop_idx + 1, None, 'index')
-        ph_pos = ph_pos[ph_start_idx:ph_stop_idx + 1]
+
+        # If mask has >0 True values, then an SNP is within the query range:
+        if np.count_nonzero(pos_mask) > 0:
+            variants = variants.compress(pos_mask)
+            pos = pos[start_idx:stop_idx + 1]
+            genotypes = subset_G_array(genotypes, start_idx, stop_idx + 1, None, 'index')
+            phased_genotypes = subset_G_array(phased_genotypes, ph_start_idx, ph_stop_idx + 1, None, 'index')
+            ph_pos = ph_pos[ph_start_idx:ph_stop_idx + 1]
+        else:
+            variants = ""
+            pos = ""
+            genotypes = ""
+            phased_genotypes = ""
+            ph_pos = ""
 
     # ----       GENE NAME        ---- #
     # Check if user has entered gene name information:

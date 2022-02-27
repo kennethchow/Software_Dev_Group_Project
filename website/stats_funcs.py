@@ -37,8 +37,9 @@ def create_index_mask(data, start_idx, stop_idx):
     sel = np.asanyarray(range(start_idx, stop_idx))
     mask = np.zeros(len(data), dtype=bool)
 
-    # Setting the values between the indices equal to True:
-    mask[sel] = True
+    # Setting the values between the indices equal to True if >1 SNP in range of query:
+    if len(sel) > 0:
+        mask[sel] = True
 
     return mask
 
