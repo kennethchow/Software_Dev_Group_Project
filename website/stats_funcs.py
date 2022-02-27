@@ -9,7 +9,7 @@ import itertools
 pop_dict = {'AFR': 'African', 'AMR': 'American', 'EAS': 'East Asian',
             'EUR': 'European', 'SAS': 'South Asian'}
 
-stats_dict = {'seq_div': 'Nucleotide Diversity', 'hap_div': 'Haplotype Diversity',
+stats_dict = {'seq_div': 'Nucleotide Diversity', 'watt_thet': 'Watterson\'s Theta', 'hap_div': 'Haplotype Diversity',
               'taj_d': 'Tajima\'s D', 'fst': 'Fst', 'daf': 'Derived Allele Frequency'}
 
 
@@ -66,6 +66,10 @@ def SummaryStats(stats, seg_pos, ac_seg, pop, pop_data, phased_genotypes):
         seq_div = allel.sequence_diversity(seg_pos, ac_seg[pop][:])
         comb_stats.append(seq_div)
 
+    if 'watt_thet' in stats:
+        watt_thet = allel.watterson_theta(seg_pos, ac_seg[pop][:])
+        comb_stats.append(watt_thet)
+
     if 'taj_d' in stats:
         taj_d = allel.tajima_d(ac_seg[pop][:], pos=seg_pos)
         comb_stats.append(taj_d)
@@ -115,9 +119,6 @@ def create_data_table(pops, stats, stats_data):
     stats_df.insert(loc=0, column='Population', value=full_pop_names)
     stats_df = stats_df.fillna('*')
     stats_df = stats_df.round(4)
-
-    stat_headers = stats_df.columns.to_list()
-    stats_data = stats_df.values
 
     return stats_df
 

@@ -168,6 +168,7 @@ def display_data(uid):
     charts = dbc.Card(
         dbc.CardBody(
             [
+                html.Br(),
                 html.H5("Summary Statistics Charts", className="card-title", style={'font-weight': 'bold'}),
                 html.P(
                     "Please choose an window size for the statistics to be averaged across and a step function to \

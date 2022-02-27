@@ -55,14 +55,14 @@ def server():
         query_id = request.form.get('unique_id')
 
         # Statistics and Populations Selected:
-        stats = [request.form.get('seq_div'), request.form.get('taj_d'),
+        stats = [request.form.get('seq_div'), request.form.get('watt_thet'), request.form.get('taj_d'),
                  request.form.get('hap_div'), request.form.get('fst'), request.form.get('daf')]
 
         pops = [request.form.get('AFR'), request.form.get('AMR'),
                 request.form.get('EAS'), request.form.get('EUR'), request.form.get('SAS')]
 
         # --- ERROR HANDLING OF USER INPUT: --- #
-        if not any(s.strip() for s in query_info):
+        if not any(s.strip() for s in query_info[1:]):
             flash('Please enter query information.', category='error')
             return render_template('server.html')
 
@@ -92,7 +92,7 @@ def server():
 
 
         # List of possible stats and populations:
-        poss_stats = ['seq_div', 'taj_d', 'hap_div', 'fst']
+        poss_stats = ['seq_div', 'watt_thet', 'taj_d', 'hap_div', 'fst']
         poss_pops = ['AFR', 'AMR', 'EAS', 'EUR', 'SAS']
 
         # Returning the ones the user has chosen:

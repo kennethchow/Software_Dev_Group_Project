@@ -178,6 +178,7 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
         ac_seg = ""
         seg_pos = ""
 
+    # If there are matching SNPs in this region, then calculate stats and generate table data:
     else:
         stats_df, fst_df, ac_seg, seg_pos = PopulationFiltering(pop_data, stats,
                                                                 pops, genotypes, phased_genotypes, variants)
