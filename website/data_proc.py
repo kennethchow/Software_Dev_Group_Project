@@ -29,7 +29,7 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
         [pop_var_data.append(x) for x in pop_data_dict[pop]]
 
     # Specifying default data to always load:
-    def_data = ['CHROM', 'POS', 'REF', 'ALT', 'GENE', 'RS_VAL', 'AA']
+    def_data = ['CHROM', 'POS', 'REF', 'ALT', 'GENE1', 'GENE2', 'RS_VAL', 'AA']
     var_data = def_data + pop_var_data
 
     # Loading SNP Variants Data:
@@ -110,11 +110,11 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
     # Check if user has entered gene name information:
     if any(gene_name.strip()):
 
-        # Create a Boolean mask array:
-        gene_mask = variants['GENE'][:] == gene_name
+        # Check whether the gene name is in either of the Gene Columns in the data:
+        gene_col = check_gene_col(variants, gene_name)
 
-        # If mask has 0 True values, then no match has been found:
-        if np.count_nonzero(gene_mask) == 0:
+        # If gene_col is none, then no match has been found:
+        if gene_col == None:
             # First check whether a gene alias has been used:
             alias_dict = load_json(gene_alias_path)
             # Search through dict to find if user's gene is a value and then return it's key if so:
@@ -126,11 +126,16 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
                 genotypes = ""
                 phased_genotypes = ""
                 ph_pos = ""
+                gene_mask = 0
             else:
-                # Create a Boolean mask array using the correct gene name, rather than the alias:
-                gene_mask = variants['GENE'][:] == gene_name
+                # Get the gene col for the new gene name:
+                gene_col = check_gene_col(variants, gene_name)
+                # Create a Boolean mask array using the gene name in our data, rather than the alias:
+                gene_mask = variants[gene_col][:] == gene_name
+        else:
+            gene_mask = variants[gene_col][:] == gene_name
 
-        # Separate if statement, in case gene_mask is generated after finding an alias:
+        # If mask has >0 True values, then a match has been found:
         if np.count_nonzero(gene_mask) > 0:
             variants = variants.compress(gene_mask)
             pos = pos.compress(gene_mask)
@@ -207,7 +212,14 @@ def filter_data(chrom, start_pos, stop_pos, rs_val, gene_name, stats, pops):
     return stats_df, fst_df, ac_seg, seg_pos, variants
 
 
+def check_gene_col(variants, gene_name):
+    if gene_name in variants['GENE1']:
+        gene_col = 'GENE1'
+    elif gene_name in variants['GENE2']:
+        gene_col = 'GENE2'
+    else:
+        gene_col = None
 
-
+    return gene_col
 
 

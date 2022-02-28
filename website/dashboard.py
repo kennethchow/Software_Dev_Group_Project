@@ -23,8 +23,17 @@ def get_data(uid, r=4):
                                        fields=import_fields,
                                        alt_number=1)
 
-    # Rounding Data:
-    main_data[import_fields[7::]] = main_data[import_fields[7::]].astype(
+    # Drop any columns if all data is NaN (i.e. no overlapping gene present):
+    main_data = main_data.loc[:, ~(main_data.astype(str) == 'nan').all()]
+
+    # Rename GENE1 or GENE2 to GENE if only one remains in the query range:
+    if 'GENE1' not in main_data.columns:
+        main_data = main_data.rename(columns={"GENE2": "GENE"})
+    elif 'GENE2' not in main_data.columns:
+        main_data = main_data.rename(columns={"GENE1": "GENE"})
+
+    # Rounding Data - Selecting fields based on import fields as this is static:
+    main_data[import_fields[8::]] = main_data[import_fields[8::]].astype(
         str).astype(float).round(r)
 
     # Get summary CSVs
@@ -231,7 +240,7 @@ def display_data(uid):
                     ]),
                 html.Br(),
                 html.Div(id='graph_container',
-                     children = [
+                     children=[
                         dbc.Row(
                             [
                                 dbc.Col(dcc.Graph(id='seq_d_graph'), style={"width": "30%", 'margin-right': '6em'}),
@@ -242,7 +251,7 @@ def display_data(uid):
                             [
                                 dbc.Col(dcc.Graph(id='watt_thet_graph'), style={"width": "30%", 'margin-right': '6em'}),
                                 dbc.Col(dcc.Graph(id='fst_graph'), style={"width": "30%"}),
-                            ]
+                            ],
                         )]
                          )
             ]
@@ -279,7 +288,6 @@ def init_callbacks(dash_app):
         Input("url", "pathname"))
     def render(url):
         uid = uid_from_url(url)
-        # TODO: Return an error if there is no data with this uid.
         return display_data(uid)
 
     @dash_app.callback(
@@ -301,7 +309,7 @@ def init_callbacks(dash_app):
         df, _, _, _, _ = get_data(uid)
 
         # Listing the possible column values for each tab:
-        a_cols = ['CHROM', 'POS', 'REF', 'ALT', 'GENE', 'RS_VAL', 'AF_AFR',
+        a_cols = ['CHROM', 'POS', 'REF', 'ALT', 'GENE', 'GENE1', 'GENE2', 'RS_VAL', 'AF_AFR',
                   'AF_AMR', 'AF_EAS', 'AF_EUR', 'AF_SAS']
         g_cols = ['CHROM', 'POS', 'GF_HET_AFR', 'GF_HOM_REF_AFR', 'GF_HOM_ALT_AFR', 'GF_HET_AMR',
                   'GF_HOM_REF_AMR', 'GF_HOM_ALT_AMR', 'GF_HET_EAS', 'GF_HOM_REF_EAS',
@@ -342,6 +350,7 @@ def init_callbacks(dash_app):
             try:
                 fig = px.line(seq_plot_df, x="chrom_pos", y="seq_div",
                               color="population", hover_name="population",
+                              title='Nucleotide Diversity',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           seq_div="Nucleotide Diversity",
                                           population="Population"
@@ -350,6 +359,7 @@ def init_callbacks(dash_app):
             except ValueError:
                 fig = px.line(seq_plot_df, x="chrom_pos", y="seq_div",
                               color="population", hover_name="population",
+                              title='Nucleotide Diversity',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           seq_div="Nucleotide Diversity",
                                           population="Population"
@@ -379,6 +389,7 @@ def init_callbacks(dash_app):
             try:
                 fig = px.line(seq_plot_df, x="chrom_pos", y="watt_thet",
                               color="population", hover_name="population",
+                              title='Watterson\'s Theta',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           watt_thet="Watterson's Theta",
                                           population="Population"
@@ -387,6 +398,7 @@ def init_callbacks(dash_app):
             except ValueError:
                 fig = px.line(seq_plot_df, x="chrom_pos", y="watt_thet",
                               color="population", hover_name="population",
+                              title='Watterson\'s Theta',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           watt_thet="Watterson's Theta",
                                           population="Population"
@@ -416,6 +428,7 @@ def init_callbacks(dash_app):
             try:
                 fig = px.line(taj_plot_df, x="chrom_pos", y="tajima_d",
                               color="population", hover_name="population",
+                              title='Tajima\'s D',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           tajima_d="Tajima's D",
                                           population="Population"
@@ -424,6 +437,7 @@ def init_callbacks(dash_app):
             except ValueError:
                 fig = px.line(taj_plot_df, x="chrom_pos", y="tajima_d",
                               color="population", hover_name="population",
+                              title='Tajima\'s D',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           tajima_d="Tajima's D",
                                           population="Population"
@@ -456,6 +470,7 @@ def init_callbacks(dash_app):
                     fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
                                   color="population", hover_name="population",
                                   color_discrete_sequence=["darkcyan"],
+                                  title='Fst (Hudson\'s)',
                                   labels=dict(chrom_pos="Chromosome Position (bp)",
                                               fst="Fst",
                                               population="Populations"
@@ -465,10 +480,11 @@ def init_callbacks(dash_app):
                     fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
                                   color="population", hover_name="population",
                                   color_discrete_sequence=["darkcyan"],
+                                  title='Fst (Hudson\'s)',
                                   labels=dict(chrom_pos="Chromosome Position (bp)",
-                                              fst="Fst",
-                                              population="Populations"
-                                              )
+                                  fst="Fst",
+                                  population="Populations"
+                                  )
                                   )
 
                 plotly_fmt(fig)
@@ -513,9 +529,10 @@ def plotly_fmt(fig):
             autoexpand=True,
             l=20,
             r=20,
-            t=20, ),
+            t=50, ),
         transition_duration=500,
-        plot_bgcolor='white'
+        plot_bgcolor='white',
+        title_x=0.5,
     )
 
 
