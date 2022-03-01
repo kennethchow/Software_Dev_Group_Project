@@ -8,7 +8,7 @@ app = create_app()
 # ======= Run File ======= #
 if __name__ == '__main__':
     app.run(debug=True,
-            threaded=True
+            threaded=True,
             host = '0.0.0.0',
             port = int(os.environ.get("PORT", 8080)))
 
