@@ -15,9 +15,21 @@
 
           <div class = "row">
               <h3><u><strong>Data Source</strong></u></h3>
-              <p>1kGP SNP Browser supports the latest human genome assembly: the 1000 Genomes 30x on GRCh38, focusing on chromosome 22. More information on this dataset can be found by <a href="https://www.internationalgenome.org/data-portal/data-collection/30x-grch38">clicking here.</a></p>
-              <p>The SNP Browser results exclude the 698 related samples in the 30x dataset, focusing only on unrelated samples. The reasoning for this is because related samples have the same genetics and would give unclear summary statistical results. 1kGP SNP Browser only focuses on SNPs, therefore, the dataset used contains non-indels and excludes the indels, to also reduce the variation which can have an impact on the SNPs. 1kGP SNP Browser also focuses on biallelic sites, since human SNPs are more common to be biallelic than multi-allelic, and would obtain concordant results for the summary statistics. </p>
-              <p>1kGP SNP Browser contains a genotypes dataset, more information on the dataset can be found through this link: <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/">Genotypes Data.</a> 1kGP SNP Browser also has a phased genotypes dataset which is used to calculate haplotype diversity, more information on this dataset can be found through this link: <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_phased/">Phased Genotypes Data.</a></p>
+              <p>1kGP SNP Browser supports the latest human genome assembly: the 1000 Genomes 30x on GRCh38,
+                  focusing on chromosome 22. More information on this dataset can be found by
+                  <a href="https://www.internationalgenome.org/data-portal/data-collection/30x-grch38">clicking here.</a></p>
+              <p>The SNP Browser results exclude the 698 related samples in the 30x dataset, focusing only on unrelated
+                  samples. The reasoning for this is because related samples have the same genetics and would give unclear
+                  summary statistical results. 1kGP SNP Browser only focuses on SNPs, therefore, the dataset used contains
+                  non-indels and excludes the indels, to also reduce the variation which can have an impact on the SNPs.
+                  1kGP SNP Browser also focuses on biallelic sites, since human SNPs are more common to be biallelic
+                  than multi-allelic, and would obtain concordant results for the summary statistics. </p>
+              <p>1kGP SNP Browser contains a genotypes dataset, more information on the dataset can be found through
+                  this link: <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/">
+                      Genotypes Data.</a> 1kGP SNP Browser also has a phased genotypes dataset which is used to calculate
+                  haplotype diversity, more information on this dataset can be found through this link:
+                  <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_phased/">
+                      Phased Genotypes Data.</a></p>
               <br><br><br>
 
           <div class="row">
@@ -37,7 +49,9 @@
 
               <br><br>
               <h5><strong>Population Query</strong></h5>
-              <p>Users will be able to specify which population they want to select and find information on. In addition, to the option of also selecting another population where both of those populations will be compared when producing the summary statistics. </p>
+              <p>Users will be able to specify which population they want to select and find information on.
+                  In addition, to the option of also selecting another population where both of those populations
+                  will be compared when producing the summary statistics. </p>
               <p>Users choice of populations are:</p>
               <ul>
                   <li><em>African (AFR):</em> Within the dataset there is a total of 661 samples</li>
@@ -51,7 +65,8 @@
 
               <br><br>
               <h5><strong>Summary Statistics Query</strong></h5>
-              <p>Users will be able to specify which summary statistics they want to view after specifying the general queries and selecting which population they want</p>
+              <p>Users will be able to specify which summary statistics they want to view after specifying the general
+                  queries and selecting which population they want</p>
               <p>Users choice of summary statistics are:</p>
               <ul>
                   <li>Tajima's D</li>
@@ -71,31 +86,51 @@
 
               <br> <br> <br>
               <h5><strong>Genotype Frequency</strong></h5>
-              <p>1kGP SNP Browser provides the users with the genotype frequency of each individual population. Genotype frequency is the prevalence or ratio of genotypes in a given population. It ranges from 0 < f < 1. When focusing on one population the genotype frequency is the number of individuals from a certain genotype divided by the total number of individuals in the specified population. </p>
+              <p>1kGP SNP Browser provides the users with the genotype frequency of each individual population. Genotype
+                  frequency is the prevalence or ratio of genotypes in a given population. It ranges from 0 < f < 1.
+                  When focusing on one population the genotype frequency is the number of individuals from a certain
+                  genotype divided by the total number of individuals in the specified population. </p>
               <br>
 
               <h5><strong>Allele Frequency</strong></h5>
-              <p>1kGP SNP Browser provides the users with the allele frequency of each individual population. Allele frequency is the prevalence of a gene variant within a given population. Allele frequency is measured by dividing the number of times the given allele is presented in a population by the total number of copies of all the alleles at that specific genetic location in the selected population. </p>
+              <p>1kGP SNP Browser provides the users with the allele frequency of each individual population. Allele
+                  frequency is the prevalence of a gene variant within a given population. Allele frequency is measured
+                  by dividing the number of times the given allele is presented in a population by the total number of
+                  copies of all the alleles at that specific genetic location in the selected population. </p>
               <br>
 
               <h5><strong>Tajima's D</strong></h5>
-              <p>1kGP SNP Browser provides the users with the statistical test for neutrality (Tajima’s D) for comparing two of the populations selected by the users. Tajima’s D is a type of test that differentiates a randomly evolving DNA sequence between one that is non-randomly evolving. Tajima’s D is mainly used to identify sequences that do not apply to the neutral theory model at equilibrium due to mutation-drift.</p>
+              <p>1kGP SNP Browser provides the users with the statistical test for neutrality (Tajima’s D) for comparing
+                  two of the populations selected by the users. Tajima’s D is a type of test that differentiates a randomly
+                  evolving DNA sequence between one that is non-randomly evolving. Tajima’s D is mainly used to identify
+                  sequences that do not apply to the neutral theory model at equilibrium due to mutation-drift.</p>
               <br>
 
               <h5><strong>Fst Value</strong></h5>
-              <p>1kGP SNP Browser provides the users with Fst values for each of the populations that the users have selected., also presenting them as a sliding window. Fst refers to the ratio of the total genetic variance embedded in a subpopulation. Fst values range from 0 to 1.</p>
+              <p>1kGP SNP Browser provides the users with Fst values for each of the populations that the users have selected,
+                  also presenting them as a sliding window. Fst refers to the ratio of the total genetic variance embedded in
+                  a subpopulation. Fst values range from 0 to 1. The Hudson Estimator was chosen as the measure of Fst due to
+                  the research of <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3759727/">Bhatia et al., 2013.</a>
+                  which showed that, unlike the Weir and Cockerham method, Hudson's Fst is "not sensitive to the ratio of
+                  sample sizes and does not systematically overestimate Fst."</p>
               <br>
 
               <h5><strong>Genetic Diversity</strong></h5>
-              <p>1kGP SNP Browser provides the user with the genetic diversity of the individual population that has been specified. Genetic diversity makes reference to the different attributes a species has inherited, by focusing on the variations there are on the alleles. To calculate the genetic diversity in a population, 1kGP SNP Browser uses the Watterson estimator/Nucleotide diversity(?). </p>
+              <p>1kGP SNP Browser provides the user with the genetic diversity of the individual population that has been specified.
+                  Genetic diversity makes reference to the different attributes a species has inherited, by focusing on the variations
+                  there are on the alleles. To calculate the genetic diversity in a population, 1kGP SNP Browser uses both the
+                  Watterson Theta estimator as well as Nucleotide diversity to measure genetic diversity. </p>
               <br>
 
               <h5><strong>Haplotype Diversity</strong></h5>
-              <p>1kGP SNP Browser provides the users with the haplotype diversity for the selected population. Haplotype diversity makes reference to the probability that two randomly sampled alleles are different between each other, it ranges from 0 to 1.</p>
+              <p>1kGP SNP Browser provides the users with the haplotype diversity for the selected population.
+                  Haplotype diversity makes reference to the probability that two randomly sampled alleles are different
+                  between each other, it ranges from 0 to 1.</p>
               <br>
 
               <h5><strong>Derived Allele Frequency</strong></h5>
-              <p>1kGP SNP Browser provides the user with another statistical test for neutrality (Derived Allele Frequency). Derived Allele Frequency (DAF) refers to the frequency that a mutated allele is present in a population. </p>
+              <p>1kGP SNP Browser provides the user with another statistical test for neutrality (Derived Allele Frequency).
+                  Derived Allele Frequency (DAF) refers to the frequency that a mutated allele is present in a population. </p>
               <br>
           </div>
 
@@ -108,46 +143,87 @@
               <br><br>
 
               <h5><strong>Genotype Frequency</strong></h5>
-              <p>There are three different genotype frequency values for each of the 5 different populations: genotype frequency for homozygous reference allele, genotype frequency for homozygous alternate allele, genotype frequency for heterozygous alleles. All values range from 0 to 1.</p>
-              <p><em><strong>High values</strong></em> of genotype frequency for heterozygous alleles within a population indicate that those alleles have increased heterozygosity in the population. <em><strong>High values</strong></em> of genotype frequency for homozygous reference alleles and homozygous alternate alleles within a population indicate that those alleles (reference and/or alternate) have increased homozygosity in the population.</p>
-              <p><em><strong>Low values</strong></em> of genotype frequency for heterozygous alleles within a population indicate that there is less heterozygosity in the alleles, but there is more homozygosity in the alleles in the population. <em><strong>Low values</strong></em> of genotype frequency for homozygous reference alleles and homozygous alternate alleles within the population indicate that those alleles (reference and/or alternate) have less homozygosity in the alleles, but there is increased heterozygosity in the alleles in the population.</p>
+              <p>There are three different genotype frequency values for each of the 5 different populations:
+                  genotype frequency for homozygous reference allele, genotype frequency for homozygous alternate
+                  allele, genotype frequency for heterozygous alleles. All values range from 0 to 1.</p>
+              <p><em><strong>High values</strong></em> of genotype frequency for heterozygous alleles within a
+                  population indicate that those alleles have increased heterozygosity in the population.
+                  <em><strong>High values</strong></em> of genotype frequency for homozygous reference alleles
+                  and homozygous alternate alleles within a population indicate that those alleles (reference and/or
+                  alternate) have increased homozygosity in the population.</p>
+              <p><em><strong>Low values</strong></em> of genotype frequency for heterozygous alleles within a
+                  population indicate that there is less heterozygosity in the alleles, but there is more homozygosity
+                  in the alleles in the population. <em><strong>Low values</strong></em> of genotype frequency for
+                  homozygous reference alleles and homozygous alternate alleles within the population indicate that
+                  those alleles (reference and/or alternate) have less homozygosity in the alleles, but there is
+                  increased heterozygosity in the alleles in the population.</p>
               <br>
 
 
               <h5><strong>Allele Frequency</strong></h5>
-              <p>Allele frequency can provide information if there is any genetic diversity within a population. If there is a change in the allele frequency it can illustrate that there is a genetic drift taking place or that there is the presence of new mutations in the population. </p>
-              <p>A <strong>high</strong> value in allele frequency indicates that there is more variation within the population. Therefore, there is a high chance that a mutation has occurred somewhere in the human lineage and is found in the majority of the population. </p>
-              <p>A <strong>low</strong> value in allele frequency indicates that there is less variation within the population. Therefore, this means that a mutation has occurred in the human lineage but it is only shown in the minority of the population. </p>
+              <p>Allele frequency can provide information if there is any genetic diversity within a population.
+                  If there is a change in the allele frequency it can illustrate that there is a genetic drift taking
+                  place or that there is the presence of new mutations in the population. </p>
+              <p>A <strong>high</strong> value in allele frequency indicates that there is more variation within the
+                  population. Therefore, there is a high chance that a mutation has occurred somewhere in the human
+                  lineage and is found in the majority of the population. </p>
+              <p>A <strong>low</strong> value in allele frequency indicates that there is less variation within the
+                  population. Therefore, this means that a mutation has occurred in the human lineage but it is only
+                  shown in the minority of the population. </p>
               <br>
 
               <h5><strong>Tajima's D</strong></h5>
-              <p>The values for tajima’s D can be both negative and positive, depending on what the value is, it indicates different things. </p>
-              <p>If the <em><strong>Tajima’s D = 0</strong></em> it indicates that the observed variation is complementary to the expected variation. Also, it means that there is no indication of selection, and that the population evolves in equilibrium due to mutation-drift.</p>
-              <p>If the <em><strong>Tajima’s D < 0 (negative)</strong></em> it indicates that there are less haplotypes, therefore decreasing heterozygosity. This implies that there is overabundance of rare alleles. Furthermore, it indicates an expansion in the population size and balancing selection.</p>
-              <p>If the <em><strong>Tajima’s D > 0 (positive)</strong></em> it indicates that there are additional haplotypes, therefore increasing heterozygosity. This implies that there is absence of rare alleles. Furthermore, it indicates a reduction in population size and balancing selection. </p>
+              <p>The values for tajima’s D can be both negative and positive, depending on what the value is,
+                  it indicates different things. </p>
+              <p>If the <em><strong>Tajima’s D = 0</strong></em> it indicates that the observed variation is complementary
+                  to the expected variation. Also, it means that there is no indication of selection, and that the population
+                  evolves in equilibrium due to mutation-drift.</p>
+              <p>If the <em><strong>Tajima’s D < 0 (negative)</strong></em> it indicates that there are less haplotypes,
+                  therefore decreasing heterozygosity. This implies that there is overabundance of rare alleles.
+                  Furthermore, it indicates an expansion in the population size and balancing selection.</p>
+              <p>If the <em><strong>Tajima’s D > 0 (positive)</strong></em> it indicates that there are additional
+                  haplotypes, therefore increasing heterozygosity. This implies that there is absence of rare alleles.
+                  Furthermore, it indicates a reduction in population size and balancing selection. </p>
               <br>
 
               <h5><strong>Fst Values</strong></h5>
-              <p>The Fst values as mentioned above range from 0 to 1. When the value is zero it is said to be a negative value, indicating that there is no genetic difference between the populations selected. </p>
-              <p><em><strong>High Fst values</strong></em> indicate that there is a significant degree of genetic differentiation between the populations that have been selected by the users or that they have strong population subdivision.</p>
-              <p><em><strong>Low Fst values</strong></em> indicate that there is absence of a significant degree of genetic differentiation between the selected populations by the users or lack of population subdivision. </p>
+              <p>The Fst values as mentioned above range from 0 to 1. When the value is zero it is said to be a negative
+                  value, indicating that there is no genetic difference between the populations selected. </p>
+              <p><em><strong>High Fst values</strong></em> indicate that there is a significant degree of genetic
+                  differentiation between the populations that have been selected by the users or that they have strong
+                  population subdivision.</p>
+              <p><em><strong>Low Fst values</strong></em> indicate that there is absence of a significant degree of genetic
+                  differentiation between the selected populations by the users or lack of population subdivision. </p>
               <br>
 
               <h5><strong>Genetic Diversity</strong></h5>
-              <p>The <em><strong>higher the levels of genetic diversity</strong></em> there is within a population the higher the chance the individuals in that population will survive changes in the environment. As well as emerging diseases and/or epidemics. A <em><strong>high value</strong></em> of genetic diversity indicates that the individuals in the population present a broad array of distinct traits.</p>
-              <p>The <em><strong>lower the level of genetic diversity</strong></em> makes it harder for the individuals in the population to evolve, and decreases the likelihood of survival if there are any environmental changes. <em><strong>Low values</strong></em> of genetic diversity imply that the individuals in the population present a limited array of distinct traits.  </p>
+              <p>The <em><strong>higher the levels of genetic diversity</strong></em> there is within a population the
+                  higher the chance the individuals in that population will survive changes in the environment. As well
+                  as emerging diseases and/or epidemics. A <em><strong>high value</strong></em> of genetic diversity
+                  indicates that the individuals in the population present a broad array of distinct traits.</p>
+              <p>The <em><strong>lower the level of genetic diversity</strong></em> makes it harder for the individuals
+                  in the population to evolve, and decreases the likelihood of survival if there are any environmental
+                  changes. <em><strong>Low values</strong></em> of genetic diversity imply that the individuals in the
+                  population present a limited array of distinct traits.  </p>
               <br>
 
               <h5><strong>Haplotype Diversity</strong></h5>
               <p>Haplotype diversity represents a probability, and values range from 0 to 1.</p>
-              <p><em><strong>High values of haplotype diversity</strong></em> indicate that there is a higher probability that the alleles within the population are different to each other. Indicating there is increased heterozygosity. </p>
-              <p><em><strong>Low values of haplotype diversity</strong></em> indicate that there is reduced probability that the alleles within the population are similar to each other. Indicating there is increased homozygosity.</p>
+              <p><em><strong>High values of haplotype diversity</strong></em> indicate that there is a higher probability
+                  that the alleles within the population are different to each other. Indicating there is increased heterozygosity. </p>
+              <p><em><strong>Low values of haplotype diversity</strong></em> indicate that there is reduced probability
+                  that the alleles within the population are similar to each other. Indicating there is increased homozygosity.</p>
               <br>
 
               <h5><strong>Derived Allele Frequency</strong></h5>
-              <p>Derived Allele Frequency (DAF) is a statistical distribution test for neutrality in population genetics, its values range from 0 to 1. </p>
-              <p><em><strong>High value of DAF</strong></em> indicates that a mutation is present somewhere on the human lineage and it is identified in  95% of the humans from the population. These high values of DAF could be due to positive selection, weak balancing selection, likelihood allele will be fixed depending if the population size is low.</p>
-              <p><em><strong>Low value of DAF</strong></em> indicates that a mutation is present in the human lineage but is only identified in 5% of the humans from the population.</p>
+              <p>Derived Allele Frequency (DAF) is a statistical distribution test for neutrality in population genetics,
+                  its values range from 0 to 1. </p>
+              <p><em><strong>High value of DAF</strong></em> indicates that a mutation is present somewhere on the human
+                  lineage and it is identified in  95% of the humans from the population. These high values of DAF could
+                  be due to positive selection, weak balancing selection, likelihood allele will be fixed depending if
+                  the population size is low.</p>
+              <p><em><strong>Low value of DAF</strong></em> indicates that a mutation is present in the human lineage
+                  but is only identified in 5% of the humans from the population.</p>
 
 
           </div>
@@ -155,19 +231,26 @@
 
           <div class="row">
               <h3><u><strong>Output Format</strong></u></h3>
-              <p>1kGP SNP Browser presents the summary statistics results from what the user has specified in the queries in a table format. Some of the summary statistics (Tajima’s D, Fst Values, Genetic Diversity) are also presented as a sliding window.</p>
-              <p>Each of the 3 sliding windows mentioned above will have the option to select 2 populations to compare, in the case that the users specify for more than 2 populations in the first population query. </p>
-              <p>1kGP SNP Browser also allows the users to specify how many base pairs (bp) the windows for the sliding window should be.</p>
+              <p>1kGP SNP Browser presents the summary statistics results from what the user has specified in the queries
+                  in a table format. Some of the summary statistics (Tajima’s D, Fst Values, Genetic Diversity) are also
+                  presented as a sliding window.</p>
+              <p>Each of the 3 sliding windows mentioned above will have the option to select 2 populations to compare,
+                  in the case that the users specify for more than 2 populations in the first population query. </p>
+              <p>1kGP SNP Browser also allows the users to specify how many base pairs (bp) the windows for the sliding
+                  window should be.</p>
               <p>If the users have queried for more than one SNP, the table will provide each individual SNP.</p>
-              <p>A table will be presented with the Fst values produced from the comparison between each population the users have specified. </p>
-              <p>A table will be displayed with each of the 5 populations (AMR, EAS, SAS, EUR, and AFR) as rows, and will contain the values of each population of the following summary statistics as columns:</p>
+              <p>A table will be presented with the Fst values produced from the comparison between each population the
+                  users have specified. </p>
+              <p>A table will be displayed with each of the 5 populations (AMR, EAS, SAS, EUR, and AFR) as rows,
+                  and will contain the values of each population of the following summary statistics as columns:</p>
               <ul>
                   <li>Nucleotide diversity as genetic diversity</li>
                   <li>Tajima's D</li>
                   <li>Haplotype diversity</li>
               </ul>
               <br>
-              <p>Three tables will be presented showing the other summary statistics: Allele Frequency, Genotype Frequency, and Derived Allele Frequency. Each of these summary statistics are separated into tabs.</p>
+              <p>Three tables will be presented showing the other summary statistics: Allele Frequency, Genotype
+                  Frequency, and Derived Allele Frequency. Each of these summary statistics are separated into tabs.</p>
               <br>
               <p>The table for Allele frequency will contain the following columns:</p>
               <ul>
