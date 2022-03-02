@@ -20,6 +20,7 @@ def about():
 def contact():
     return render_template('contact.html')
 
+
 @basic_pgs.route('/userguide', methods=['GET'])
 def userguide():
     return render_template('userguide.html')

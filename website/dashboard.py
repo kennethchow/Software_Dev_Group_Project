@@ -23,8 +23,20 @@ def get_data(uid, r=4):
                                        fields=import_fields,
                                        alt_number=1)
 
-    # Rounding Data:
-    main_data[import_fields[7::]] = main_data[import_fields[7::]].astype(
+    # Drop any gene columns if all data is NaN (i.e. no overlapping gene present in region):
+    gene_cols = ['GENE1', 'GENE2']
+    for g in range(len(gene_cols)):
+        if (main_data.loc[:, gene_cols[g]].astype(str) == 'nan').all():
+            main_data = main_data.drop(columns=[gene_cols[g]])
+
+    # Rename GENE1 or GENE2 to GENE if only one remains in the query range:
+    if 'GENE1' not in main_data.columns:
+        main_data = main_data.rename(columns={"GENE2": "GENE"})
+    elif 'GENE2' not in main_data.columns:
+        main_data = main_data.rename(columns={"GENE1": "GENE"})
+
+    # Rounding Data - Selecting fields based on import fields as this is static:
+    main_data[import_fields[8::]] = main_data[import_fields[8::]].astype(
         str).astype(float).round(r)
 
     # Get summary CSVs
@@ -88,7 +100,7 @@ def init_dashboard(server):
 
 def display_data(uid):
     # Read in the data
-    _, summary_fst, summary_stats, _, _ = get_data(uid)
+    _, summary_fst, summary_stats, seg_pos, _ = get_data(uid)
 
     # Get the names of the populations the user has specified:
     user_pops = summary_stats['Population'].to_list()
@@ -165,87 +177,107 @@ def display_data(uid):
             color="white", outline=True
         )
 
-    charts = dbc.Card(
-        dbc.CardBody(
-            [
-                html.Br(),
-                html.H5("Summary Statistics Charts", className="card-title", style={'font-weight': 'bold'}),
-                html.P(
-                    "Please choose an window size for the statistics to be averaged across and a step function to \
-                     determine how far each window shifts (defaults set to 1,000bp and 100bp respectively)."),
-                dbc.Col(
-                    [html.Div([
-                        html.Div(
-                            [
-                                html.H6("""Window Size (bp)""",
-                                        style={'margin-right': '2em'})
-                            ],
-                        ),
-                        dcc.Input(
-                            id='window',
-                            type='number',
-                            value=1000,
-                            min=1,
-                            className="form-control w-auto",
-                            style={"width": "50%", 'display': 'inline-block',
-                                   'verticalAlign': "left", 'margin-right': '12em'}),
-                        html.Div(
-                            [
-                                html.H6("""Step (bp)""",
-                                        style={'margin-right': '2em'})
-                            ],
-                        ),
-                        dcc.Input(
-                            id='step',
-                            type='number',
-                            value=100,
-                            min=1,
-                            className="form-control w-auto",
-                            style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "right"})
-                    ],
-                        style={'display': 'flex'}, ),
-                        html.Br(),
-                        html.Div([
+    # Don't display charts if there are less than 10 variants:
+    if len(seg_pos) > 10:
+        charts = dbc.Card(
+            dbc.CardBody(
+                [
+                    html.Br(),
+                    html.H5("Summary Statistics Charts", className="card-title", style={'font-weight': 'bold'}),
+                    html.P(
+                        "Please choose an window size for the statistics to be averaged across and a step function to \
+                         determine how far each window shifts (defaults set to 1,000bp and 100bp respectively). Please \
+                         ensure both are lower than the number of SNPs in the data."),
+                    dbc.Col(
+                        [html.Div([
                             html.Div(
                                 [
-                                    html.H6("""First Population""",
+                                    html.H6("""Window Size (bp)""",
                                             style={'margin-right': '2em'})
                                 ],
                             ),
-                            dcc.Dropdown(user_cond_list,
-                                         placeholder='-',
-                                         id='pop_1',
-                                         style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "left"}),
+                            dcc.Input(
+                                id='window',
+                                type='number',
+                                value=1000,
+                                min=1,
+                                className="form-control w-auto",
+                                style={"width": "50%", 'display': 'inline-block',
+                                       'verticalAlign': "left", 'margin-right': '12em'}),
                             html.Div(
                                 [
-                                    html.H6("""Second Population""",
+                                    html.H6("""Step (bp)""",
                                             style={'margin-right': '2em'})
                                 ],
                             ),
-                            dcc.Dropdown(user_cond_list,
-                                         placeholder='-',
-                                         id='pop_2',
-                                         style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "right"})
+                            dcc.Input(
+                                id='step',
+                                type='number',
+                                value=100,
+                                min=1,
+                                className="form-control w-auto",
+                                style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "right"})
                         ],
                             style={'display': 'flex'}, ),
-                    ]),
-                html.Br(),
-                dbc.Row(
-                    [
-                        dbc.Col(dcc.Graph(id='seq_d_graph'), style={"width": "30%", 'margin-right': '6em'}),
-                        dbc.Col(dcc.Graph(id='taj_d_graph'), style={"width": "30%"}),
-                    ]
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(dcc.Graph(id='watt_thet_graph'), style={"width": "30%", 'margin-right': '6em'}),
-                        dbc.Col(dcc.Graph(id='fst_graph'), style={"width": "30%"}),
-                    ]
-                ),
-            ]
+                            html.Br(),
+                            html.Div([
+                                html.Div(
+                                    [
+                                        html.H6("""First Population""",
+                                                style={'margin-right': '2em'})
+                                    ],
+                                ),
+                                dcc.Dropdown(user_cond_list,
+                                             placeholder='-',
+                                             id='pop_1',
+                                             style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "left"}),
+                                html.Div(
+                                    [
+                                        html.H6("""Second Population""",
+                                                style={'margin-right': '2em'})
+                                    ],
+                                ),
+                                dcc.Dropdown(user_cond_list,
+                                             placeholder='-',
+                                             id='pop_2',
+                                             style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "right"})
+                            ],
+                                style={'display': 'flex'}, ),
+                        ]),
+                    html.Br(),
+                    html.Div(id='graph_container',
+                         children=[
+                            dbc.Row(
+                                [
+                                    dbc.Col(dcc.Graph(id='seq_d_graph'), style={"width": "30%", 'margin-right': '6em'}),
+                                    dbc.Col(dcc.Graph(id='taj_d_graph'), style={"width": "30%"}),
+                                ]
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(dcc.Graph(id='watt_thet_graph'), style={"width": "30%", 'margin-right': '6em'}),
+                                    dbc.Col(dcc.Graph(id='fst_graph'), style={"width": "30%"}),
+                                ],
+                            )]
+                             )
+                ]
+            )
+            , color="white", outline=True
         )
-        , color="white", outline=True
-    )
+
+    else:
+        charts = dbc.Card(
+            dbc.CardBody(
+                [
+                    html.Br(),
+                    html.H5("Summary Statistics Charts", className="card-title", style={'font-weight': 'bold'}),
+                    html.P(
+                        "Summary statistics charts are not displayed for queries containing less than \
+                        ten SNPs in the selected region.")
+                    ]
+            )
+            , color="white", outline=True
+        )
 
     return dbc.Container(
         [
@@ -276,8 +308,16 @@ def init_callbacks(dash_app):
         Input("url", "pathname"))
     def render(url):
         uid = uid_from_url(url)
-        # TODO: Return an error if there is no data with this uid.
         return display_data(uid)
+
+    @dash_app.callback(
+        Output("graph_container", "style"),
+        [Input('pop_1', 'value')],)
+    def hide_graphs(p1):
+        if p1 is not None:
+            return {'display': 'block'}
+        else:
+            return {'visibility': 'hidden'}
 
     @dash_app.callback(
         Output("tab-content", "children"),
@@ -289,7 +329,7 @@ def init_callbacks(dash_app):
         df, _, _, _, _ = get_data(uid)
 
         # Listing the possible column values for each tab:
-        a_cols = ['CHROM', 'POS', 'REF', 'ALT', 'GENE', 'RS_VAL', 'AF_AFR',
+        a_cols = ['CHROM', 'POS', 'REF', 'ALT', 'GENE', 'GENE1', 'GENE2', 'RS_VAL', 'AF_AFR',
                   'AF_AMR', 'AF_EAS', 'AF_EUR', 'AF_SAS']
         g_cols = ['CHROM', 'POS', 'GF_HET_AFR', 'GF_HOM_REF_AFR', 'GF_HOM_ALT_AFR', 'GF_HET_AMR',
                   'GF_HOM_REF_AMR', 'GF_HOM_ALT_AMR', 'GF_HET_EAS', 'GF_HOM_REF_EAS',
@@ -330,6 +370,7 @@ def init_callbacks(dash_app):
             try:
                 fig = px.line(seq_plot_df, x="chrom_pos", y="seq_div",
                               color="population", hover_name="population",
+                              title='Nucleotide Diversity',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           seq_div="Nucleotide Diversity",
                                           population="Population"
@@ -338,6 +379,7 @@ def init_callbacks(dash_app):
             except ValueError:
                 fig = px.line(seq_plot_df, x="chrom_pos", y="seq_div",
                               color="population", hover_name="population",
+                              title='Nucleotide Diversity',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           seq_div="Nucleotide Diversity",
                                           population="Population"
@@ -367,6 +409,7 @@ def init_callbacks(dash_app):
             try:
                 fig = px.line(seq_plot_df, x="chrom_pos", y="watt_thet",
                               color="population", hover_name="population",
+                              title='Watterson\'s Theta',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           watt_thet="Watterson's Theta",
                                           population="Population"
@@ -375,6 +418,7 @@ def init_callbacks(dash_app):
             except ValueError:
                 fig = px.line(seq_plot_df, x="chrom_pos", y="watt_thet",
                               color="population", hover_name="population",
+                              title='Watterson\'s Theta',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           watt_thet="Watterson's Theta",
                                           population="Population"
@@ -404,6 +448,7 @@ def init_callbacks(dash_app):
             try:
                 fig = px.line(taj_plot_df, x="chrom_pos", y="tajima_d",
                               color="population", hover_name="population",
+                              title='Tajima\'s D',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           tajima_d="Tajima's D",
                                           population="Population"
@@ -412,6 +457,7 @@ def init_callbacks(dash_app):
             except ValueError:
                 fig = px.line(taj_plot_df, x="chrom_pos", y="tajima_d",
                               color="population", hover_name="population",
+                              title='Tajima\'s D',
                               labels=dict(chrom_pos="Chromosome Position (bp)",
                                           tajima_d="Tajima's D",
                                           population="Population"
@@ -444,6 +490,7 @@ def init_callbacks(dash_app):
                     fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
                                   color="population", hover_name="population",
                                   color_discrete_sequence=["darkcyan"],
+                                  title='Fst (Hudson\'s)',
                                   labels=dict(chrom_pos="Chromosome Position (bp)",
                                               fst="Fst",
                                               population="Populations"
@@ -453,10 +500,11 @@ def init_callbacks(dash_app):
                     fig = px.line(fst_plot_df, x="chrom_pos", y="fst",
                                   color="population", hover_name="population",
                                   color_discrete_sequence=["darkcyan"],
+                                  title='Fst (Hudson\'s)',
                                   labels=dict(chrom_pos="Chromosome Position (bp)",
-                                              fst="Fst",
-                                              population="Populations"
-                                              )
+                                  fst="Fst",
+                                  population="Populations"
+                                  )
                                   )
 
                 plotly_fmt(fig)
@@ -501,9 +549,10 @@ def plotly_fmt(fig):
             autoexpand=True,
             l=20,
             r=20,
-            t=20, ),
+            t=50, ),
         transition_duration=500,
-        plot_bgcolor='white'
+        plot_bgcolor='white',
+        title_x=0.5,
     )
 
 

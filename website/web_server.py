@@ -40,10 +40,11 @@ def server():
         user_query_ids = None
 
     if request.method == 'POST':
-        # Delete all files currently stored in guest folder:
-        file_list = glob.glob(os.path.join(save_folder, "*"))
-        for f in file_list:
-            os.remove(f)
+        if user_id is None:
+            # Delete all files currently stored in guest folder:
+            file_list = glob.glob(os.path.join(save_folder, "*"))
+            for f in file_list:
+                os.remove(f)
 
         # Query Information:
         chrom = request.form.get('chr')
@@ -138,8 +139,8 @@ def server():
             pass
 
         # Saving ac_seg to h5 file:
-        h5f = h5py.File(save_locs[2], mode='w')
-        h5f['ac_seg'] = ac_seg
+        with h5py.File(save_locs[2], mode='w') as h5f:
+            h5f['ac_seg'] = ac_seg
 
         # Saving seg_pos to numpy array:
         np.save(save_locs[3], seg_pos)
