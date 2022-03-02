@@ -40,10 +40,11 @@ def server():
         user_query_ids = None
 
     if request.method == 'POST':
-        # Delete all files currently stored in guest folder:
-        file_list = glob.glob(os.path.join(save_folder, "*"))
-        for f in file_list:
-            os.remove(f)
+        if user_id is None:
+            # Delete all files currently stored in guest folder:
+            file_list = glob.glob(os.path.join(save_folder, "*"))
+            for f in file_list:
+                os.remove(f)
 
         # Query Information:
         chrom = request.form.get('chr')
