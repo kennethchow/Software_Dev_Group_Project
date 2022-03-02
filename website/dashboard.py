@@ -23,8 +23,11 @@ def get_data(uid, r=4):
                                        fields=import_fields,
                                        alt_number=1)
 
-    # Drop any columns if all data is NaN (i.e. no overlapping gene present):
-    main_data = main_data.loc[:, ~(main_data.astype(str) == 'nan').all()]
+    # Drop any gene columns if all data is NaN (i.e. no overlapping gene present in region):
+    gene_cols = ['GENE1', 'GENE2']
+    for g in range(len(gene_cols)):
+        if (main_data.loc[:, gene_cols[g]].astype(str) == 'nan').all():
+            main_data = main_data.drop(columns=[gene_cols[g]])
 
     # Rename GENE1 or GENE2 to GENE if only one remains in the query range:
     if 'GENE1' not in main_data.columns:
@@ -97,7 +100,7 @@ def init_dashboard(server):
 
 def display_data(uid):
     # Read in the data
-    _, summary_fst, summary_stats, _, _ = get_data(uid)
+    _, summary_fst, summary_stats, seg_pos, _ = get_data(uid)
 
     # Get the names of the populations the user has specified:
     user_pops = summary_stats['Population'].to_list()
