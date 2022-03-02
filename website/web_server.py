@@ -139,8 +139,8 @@ def server():
             pass
 
         # Saving ac_seg to h5 file:
-        h5f = h5py.File(save_locs[2], mode='w')
-        h5f['ac_seg'] = ac_seg
+        with h5py.File(save_locs[2], mode='w') as h5f:
+            h5f['ac_seg'] = ac_seg
 
         # Saving seg_pos to numpy array:
         np.save(save_locs[3], seg_pos)
