@@ -1,6 +1,6 @@
-# Term2_WebApp
+# 1kGP SNP Browser
 
-Web app designed for Term 2 Software Dev Project - MSc Bioinformatics
+Web app designed for Term 2 Software Development Project - MSc Bioinformatics.
 
 To run with Python 3.8.12 and pip 21.2.2:
 
