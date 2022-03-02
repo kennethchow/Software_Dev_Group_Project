@@ -177,90 +177,107 @@ def display_data(uid):
             color="white", outline=True
         )
 
-    charts = dbc.Card(
-        dbc.CardBody(
-            [
-                html.Br(),
-                html.H5("Summary Statistics Charts", className="card-title", style={'font-weight': 'bold'}),
-                html.P(
-                    "Please choose an window size for the statistics to be averaged across and a step function to \
-                     determine how far each window shifts (defaults set to 1,000bp and 100bp respectively)."),
-                dbc.Col(
-                    [html.Div([
-                        html.Div(
-                            [
-                                html.H6("""Window Size (bp)""",
-                                        style={'margin-right': '2em'})
-                            ],
-                        ),
-                        dcc.Input(
-                            id='window',
-                            type='number',
-                            value=1000,
-                            min=1,
-                            className="form-control w-auto",
-                            style={"width": "50%", 'display': 'inline-block',
-                                   'verticalAlign': "left", 'margin-right': '12em'}),
-                        html.Div(
-                            [
-                                html.H6("""Step (bp)""",
-                                        style={'margin-right': '2em'})
-                            ],
-                        ),
-                        dcc.Input(
-                            id='step',
-                            type='number',
-                            value=100,
-                            min=1,
-                            className="form-control w-auto",
-                            style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "right"})
-                    ],
-                        style={'display': 'flex'}, ),
-                        html.Br(),
-                        html.Div([
+    # Don't display charts if there are less than 10 variants:
+    if len(seg_pos) > 10:
+        charts = dbc.Card(
+            dbc.CardBody(
+                [
+                    html.Br(),
+                    html.H5("Summary Statistics Charts", className="card-title", style={'font-weight': 'bold'}),
+                    html.P(
+                        "Please choose an window size for the statistics to be averaged across and a step function to \
+                         determine how far each window shifts (defaults set to 1,000bp and 100bp respectively). Please \
+                         ensure both are lower than the number of SNPs in the data."),
+                    dbc.Col(
+                        [html.Div([
                             html.Div(
                                 [
-                                    html.H6("""First Population""",
+                                    html.H6("""Window Size (bp)""",
                                             style={'margin-right': '2em'})
                                 ],
                             ),
-                            dcc.Dropdown(user_cond_list,
-                                         placeholder='-',
-                                         id='pop_1',
-                                         style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "left"}),
+                            dcc.Input(
+                                id='window',
+                                type='number',
+                                value=1000,
+                                min=1,
+                                className="form-control w-auto",
+                                style={"width": "50%", 'display': 'inline-block',
+                                       'verticalAlign': "left", 'margin-right': '12em'}),
                             html.Div(
                                 [
-                                    html.H6("""Second Population""",
+                                    html.H6("""Step (bp)""",
                                             style={'margin-right': '2em'})
                                 ],
                             ),
-                            dcc.Dropdown(user_cond_list,
-                                         placeholder='-',
-                                         id='pop_2',
-                                         style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "right"})
+                            dcc.Input(
+                                id='step',
+                                type='number',
+                                value=100,
+                                min=1,
+                                className="form-control w-auto",
+                                style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "right"})
                         ],
                             style={'display': 'flex'}, ),
-                    ]),
-                html.Br(),
-                html.Div(id='graph_container',
-                     children=[
-                        dbc.Row(
-                            [
-                                dbc.Col(dcc.Graph(id='seq_d_graph'), style={"width": "30%", 'margin-right': '6em'}),
-                                dbc.Col(dcc.Graph(id='taj_d_graph'), style={"width": "30%"}),
-                            ]
-                        ),
-                        dbc.Row(
-                            [
-                                dbc.Col(dcc.Graph(id='watt_thet_graph'), style={"width": "30%", 'margin-right': '6em'}),
-                                dbc.Col(dcc.Graph(id='fst_graph'), style={"width": "30%"}),
+                            html.Br(),
+                            html.Div([
+                                html.Div(
+                                    [
+                                        html.H6("""First Population""",
+                                                style={'margin-right': '2em'})
+                                    ],
+                                ),
+                                dcc.Dropdown(user_cond_list,
+                                             placeholder='-',
+                                             id='pop_1',
+                                             style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "left"}),
+                                html.Div(
+                                    [
+                                        html.H6("""Second Population""",
+                                                style={'margin-right': '2em'})
+                                    ],
+                                ),
+                                dcc.Dropdown(user_cond_list,
+                                             placeholder='-',
+                                             id='pop_2',
+                                             style={"width": "50%", 'display': 'inline-block', 'verticalAlign': "right"})
                             ],
-                        )]
-                         )
-            ]
+                                style={'display': 'flex'}, ),
+                        ]),
+                    html.Br(),
+                    html.Div(id='graph_container',
+                         children=[
+                            dbc.Row(
+                                [
+                                    dbc.Col(dcc.Graph(id='seq_d_graph'), style={"width": "30%", 'margin-right': '6em'}),
+                                    dbc.Col(dcc.Graph(id='taj_d_graph'), style={"width": "30%"}),
+                                ]
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(dcc.Graph(id='watt_thet_graph'), style={"width": "30%", 'margin-right': '6em'}),
+                                    dbc.Col(dcc.Graph(id='fst_graph'), style={"width": "30%"}),
+                                ],
+                            )]
+                             )
+                ]
+            )
+            , color="white", outline=True
         )
-        , color="white", outline=True
-    )
+
+    else:
+        charts = dbc.Card(
+            dbc.CardBody(
+                [
+                    html.Br(),
+                    html.H5("Summary Statistics Charts", className="card-title", style={'font-weight': 'bold'}),
+                    html.P(
+                        "Summary statistics charts are not displayed for queries containing less than \
+                        ten SNPs in the selected region.")
+                    ]
+            )
+            , color="white", outline=True
+        )
 
     return dbc.Container(
         [
