@@ -91,7 +91,7 @@ def SummaryStats(stats, seg_pos, ac_seg, pop, pop_data, phased_genotypes):
             comb_stats.append(hap_div)
 
         else:
-            comb_stats.append('**')
+            comb_stats.append('*')
 
     return comb_stats
 
@@ -196,7 +196,7 @@ def PopulationFiltering(pop_data, stats, pops, genotypes, phased_genotypes, vari
                 num, den = allel.hudson_fst(ac_seg[pop_combs[c][0]],
                                             ac_seg[pop_combs[c][1]])
                 try:
-                    fst = np.sum(num) / np.sum(den)
+                    fst = np.nansum(num) / np.nansum(den)
                 except:
                     fst = 0
                 fst_comps.append(fst)
@@ -206,7 +206,7 @@ def PopulationFiltering(pop_data, stats, pops, genotypes, phased_genotypes, vari
             fst_df = pd.DataFrame({'Populations Compared': fst_col_vals,
                                    'Fst Value': fst_comps},
                                   columns=['Populations Compared', 'Fst Value'])
-            fst_df = fst_df.fillna('***')
+            fst_df = fst_df.fillna('*')
 
         else:
             fst_df = ""
