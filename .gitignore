@@ -3,4 +3,5 @@
 website/__pycache__
 website/dbs/database
 .virtualenv~
+.DS_Store
 website/uploads
