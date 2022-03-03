@@ -4,6 +4,8 @@ The 1kGP SNP browser is a data portal designed to process and analyze human vari
 
 How to run locally on Python 3:
 
+-- Create a local 'uploads' folder inside the website folder. 
+
 ```no-highlight
 pip3 install -r requirements.txt
 python3 main.py
