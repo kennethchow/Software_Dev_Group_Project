@@ -11,7 +11,7 @@ pip3 install -r requirements.txt
 python3 main.py
 ```
 
-The 1kGP SNP browser is avaiable at [1kgpsnpbrowser.rf.gd](http://www.1kgpsnpbrowser.rf.gd)
+The 1kGP SNP browser is avaiable at [1kgpsnpbrowser.rf.gd](https://final-1kgp-snp-browser-qydhtixa5a-ew.a.run.app)
 
 ![home page](Documentation/screenshots/1kgp_homepage.png)
 ![snp browser](Documentation/screenshots/SNP_browser.png)
